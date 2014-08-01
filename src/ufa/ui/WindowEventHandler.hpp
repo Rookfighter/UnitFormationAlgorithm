@@ -1,17 +1,18 @@
 #ifndef UFA_WINDOW_EVENT_HANDLER_HPP
 #define UFA_WINDOW_EVENT_HANDLER_HPP
 
+#include <memory>
 #include "ufa/ui/EventHandler.hpp"
+#include "ufa/ui/DrawWindow.hpp"
 
 namespace ufa
 {
-
 	class WindowEventHandler: public EventHandler
 	{
 	private:
-		sf::Window &window_;
+		const std::shared_ptr<DrawWindow> window_;
 	public:
-		WindowEventHandler(sf::Window &p_window);
+		WindowEventHandler(const std::shared_ptr<DrawWindow> &p_window);
 		~WindowEventHandler();
 		
 		void handleEvent(const sf::Event &p_event);

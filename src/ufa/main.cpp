@@ -1,11 +1,12 @@
 #include <memory>
-#include <iostream>
+#include "ufa/general/Logging.hpp"
 #include "ufa/logic/SimulationController.hpp"
 #include "ufa/logic/UnitController.hpp"
 #include "ufa/entities/World.hpp"
 #include "ufa/ui/DrawWindow.hpp"
 #include "ufa/ui/MouseEventHandler.hpp"
 #include "ufa/ui/WindowEventHandler.hpp"
+#include "ufa/ui/DrawableUnit.hpp"
 #include "ufa/general/Math.hpp"
 
 #define SCREEN_WIDTH 800
@@ -16,15 +17,19 @@ std::shared_ptr<ufa::World> world(new ufa::World());
 std::shared_ptr<ufa::UnitController> unitController(new ufa::UnitController(world));
 std::shared_ptr<ufa::SimulationController> simulationController(new ufa::SimulationController());
 std::shared_ptr<ufa::DrawWindow> window(new ufa::DrawWindow(SCREEN_WIDTH, SCREEN_HEIGHT, world));
-
+std::shared_ptr<ufa::Unit> unit(new ufa::Unit());
+std::shared_ptr<ufa::DrawableUnit> drawUnit(new ufa::DrawableUnit(unit));
 
 static void init()
 {
-	world->units.push_back(std::shared_ptr<ufa::Unit>(new ufa::Unit()));
-	world->units.front()->position.set(10,10);
-	world->units.front()->radius = 1;
+	unit->position.set(10,10);
+	unit->radius = 1;
+	
+	world->units.push_back(unit);
+	window->getDrawer().addDrawObject(drawUnit);
 	simulationController->addController(unitController);
-	window->addEventHandler(std::shared_ptr<ufa::WindowEventHandler>(new ufa::WindowEventHandler(window->getRenderWindow())));
+	window->addEventHandler(std::shared_ptr<ufa::WindowEventHandler>(new ufa::WindowEventHandler(window)));
+	window->addEventHandler(std::shared_ptr<ufa::MouseEventHandler>(new ufa::MouseEventHandler(window)));
 }
 
 static void run()
@@ -42,7 +47,7 @@ static void run()
 		if(loopTime > elapsed)
 			sf::sleep(loopTime - elapsed);
 		else
-			std::cout << "Timed out." << std::endl;
+			PRINT_WARN("Gameloop timed out.");
 		clock.restart();
 	}
 }
@@ -53,9 +58,9 @@ int main()
 		init();
 		run();
 	} catch(std::exception &e) {
-		std::cout << "Catched exception: " << e.what() << std::endl;
+		PRINT_ERROR("Catched exception: %s.", e.what());
 	} catch(...) {
-		std::cout << "Catched anything." << std::endl;
+		PRINT_ERROR("Catched anything.");
 	}
 	return 0;
 }

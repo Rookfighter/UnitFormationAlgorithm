@@ -1,7 +1,10 @@
 #ifndef UFA_MOUSE_HANDLER_EVENT_HPP
 #define UFA_MOUSE_HANDLER_EVENT_HPP
 
+#include <memory>
 #include "ufa/ui/EventHandler.hpp"
+#include "ufa/ui/DrawWindow.hpp"
+#include "ufa/ui/MouseBox.hpp"
 
 namespace ufa
 {
@@ -9,9 +12,15 @@ namespace ufa
 	{
 	private:
 		bool rightPressed_, leftPressed_;
-		sf::Window &window_;
+		sf::Vector2f leftStart;
+		std::shared_ptr<DrawWindow> window_;
+		std::shared_ptr<MouseBox> mouseBox_;
+		
+		void processLeftMouseButtonPressed(const sf::Event &p_event);
+		void processLeftMouseButtonReleased(const sf::Event &p_event);
+		void processMouseMoved(const sf::Event &p_event);
 	public:
-		MouseEventHandler(sf::Window &p_window);
+		MouseEventHandler(const std::shared_ptr<DrawWindow> &p_window);
 		~MouseEventHandler();
 			
 		void handleEvent(const sf::Event &p_event);

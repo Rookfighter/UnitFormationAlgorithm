@@ -1,8 +1,6 @@
 #include "ufa/ui/SimulationDrawer.hpp"
-#include <iostream>
+#include "ufa/ui/DrawEvent.hpp"
 #define SIZE_FACTOR 30
-#define CIRCLE_THICKNESS 3
-#define UNIT_COLOR sf::Color::Cyan
 
 namespace ufa
 {
@@ -14,31 +12,62 @@ namespace ufa
 	SimulationDrawer::~SimulationDrawer()
 	{	}
 
-	void SimulationDrawer::drawSimulation(sf::RenderTarget &p_renderTarget)
+	void SimulationDrawer::addDrawObject(const std::shared_ptr<Drawable> &p_drawObject)
 	{
-		std::list<std::shared_ptr<Unit>>::iterator it;
-		for(it = world_->units.begin(); it != world_->units.end(); ++it)
-			drawUnit(p_renderTarget, *it);
+		drawObjects_.push_back(p_drawObject);
 	}
 	
-	void SimulationDrawer::drawUnit(sf::RenderTarget &p_renderTarget, const std::shared_ptr<Unit> p_unit)
+	void SimulationDrawer::addHudElement(const std::shared_ptr<Drawable> &p_hudElement)
 	{
+		hudElements_.push_back(p_hudElement);
+	}
+	
+	void SimulationDrawer::drawSimulation(sf::RenderTarget &p_renderTarget)
+	{
+		drawDrawObjects(p_renderTarget);
+		// create a texture on which the hud will be drawn
+		hud.create(p_renderTarget.getSize().x, p_renderTarget.getSize().y);
+		hud.clear(sf::Color::Transparent);
+		drawHudElements(hud);
+		hud.display();
+		sf::Sprite hudSprite(hud.getTexture());
+		// set the position of the hudSprite to the top left corner
+		int x = p_renderTarget.getView().getCenter().x - (p_renderTarget.getSize().x / 2);
+		int y = p_renderTarget.getView().getCenter().y - (p_renderTarget.getSize().y / 2);
+		hudSprite.setPosition(x, y);
 		
-		int midRadius = (int) ((p_unit->radius * SIZE_FACTOR) / 8);
-		sf::CircleShape mid(midRadius);
-		mid.setFillColor(UNIT_COLOR);
+		p_renderTarget.draw(hudSprite);
+	}
+	
+	void SimulationDrawer::drawDrawObjects(sf::RenderTarget &p_renderTarget)
+	{
+		DrawEvent event(p_renderTarget);
+		event.sizeFactor = SIZE_FACTOR;
 		
-		int circleRadius = (int) ((p_unit->radius * SIZE_FACTOR) - CIRCLE_THICKNESS);
-		sf::CircleShape circle(circleRadius);
-		circle.setFillColor(sf::Color::Transparent);
-		circle.setOutlineThickness(CIRCLE_THICKNESS);
-		circle.setOutlineColor(UNIT_COLOR);
+		std::list<std::shared_ptr<Drawable>>::iterator it;
+		for(it = drawObjects_.begin(); it != drawObjects_.end(); ++it)
+			(*it)->draw(event);
+	}
+	
+	void SimulationDrawer::drawHudElements(sf::RenderTarget &p_renderTarget)
+	{
+		DrawEvent event(p_renderTarget);
+		event.sizeFactor = SIZE_FACTOR;
 		
-		mid.setPosition(p_unit->position.x * SIZE_FACTOR -  midRadius, p_unit->position.y * SIZE_FACTOR - midRadius);
-		circle.setPosition(p_unit->position.x * SIZE_FACTOR - circleRadius, p_unit->position.y * SIZE_FACTOR - circleRadius);
-		
-		p_renderTarget.draw(circle);
-		p_renderTarget.draw(mid);
+		std::list<std::shared_ptr<Drawable>>::iterator it;
+		for(it = hudElements_.begin(); it != hudElements_.end(); ++it)
+			(*it)->draw(event);
+	}
+	
+	std::vector<std::shared_ptr<Drawable>> SimulationDrawer::getObjectsInRect(
+					const sf::Vector2f &p_topLeft,
+					const sf::Vector2f &p_size)
+	{
+		std::list<std::shared_ptr<Drawable>>::iterator it;
+		for(it = drawObjects_.begin(); it != drawObjects_.end(); ++it) {
+			if()
+		}
+
 	}
 }
 

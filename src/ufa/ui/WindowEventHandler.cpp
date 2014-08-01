@@ -3,7 +3,7 @@
 namespace ufa
 {
 
-	WindowEventHandler::WindowEventHandler(sf::Window &p_window)
+	WindowEventHandler::WindowEventHandler(const std::shared_ptr<DrawWindow> &p_window)
 	:window_(p_window) {	}
 
 	WindowEventHandler::~WindowEventHandler()
@@ -14,7 +14,7 @@ namespace ufa
 	{
 		switch(p_event.type) {
 			case sf::Event::Closed:
-				window_.close();
+				window_->getRenderWindow().close();
 				break;
 			case sf::Event::LostFocus:
 				break;
