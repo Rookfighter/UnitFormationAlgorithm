@@ -27,6 +27,7 @@ namespace ufa
 	{
 		sf::Event event;
 		while(window_.pollEvent(event)) {
+			// give the event to each eventhandler
 			for(int i = 0; i < eventHandler_.size(); ++i)
 				eventHandler_[i]->handleEvent(event);
 		}

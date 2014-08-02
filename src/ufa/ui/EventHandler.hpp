@@ -5,7 +5,8 @@
 
 namespace ufa
 {
-
+	/* This is a simple Interface for EventHandlers. In handleEvent() the given
+	 * event should be processed. */
 	class EventHandler
 	{
 	public:

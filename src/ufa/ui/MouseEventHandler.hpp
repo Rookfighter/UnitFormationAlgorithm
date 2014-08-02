@@ -8,16 +8,17 @@
 
 namespace ufa
 {
+	/* The MouseEventHandler handles all MouseEvents. */
 	class MouseEventHandler: public EventHandler
 	{
 	private:
 		bool rightPressed_, leftPressed_;
-		sf::Vector2f leftStart;
 		std::shared_ptr<DrawWindow> window_;
 		std::shared_ptr<MouseBox> mouseBox_;
 		
 		void processLeftMouseButtonPressed(const sf::Event &p_event);
 		void processLeftMouseButtonReleased(const sf::Event &p_event);
+		void selectUnits();
 		void processMouseMoved(const sf::Event &p_event);
 	public:
 		MouseEventHandler(const std::shared_ptr<DrawWindow> &p_window);

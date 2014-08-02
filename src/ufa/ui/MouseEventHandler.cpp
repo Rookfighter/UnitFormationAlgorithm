@@ -8,7 +8,7 @@ namespace ufa
 	MouseEventHandler::MouseEventHandler(const std::shared_ptr<DrawWindow> &p_window)
 	:rightPressed_(false), leftPressed_(false), window_(p_window), mouseBox_(new MouseBox)
 	{
-		window_->getDrawer().addHudElement(mouseBox_);
+		window_->getDrawer().hudElements.push_back(mouseBox_);
 	}
 
 	MouseEventHandler::~MouseEventHandler()
@@ -45,11 +45,8 @@ namespace ufa
 		if(!leftPressed_) {
 			leftPressed_ = true;
 			mouseBox_->drawBox = true;
-			leftStart.x = p_event.mouseButton.x;
-			leftStart.y = p_event.mouseButton.y;
-			mouseBox_->topLeft = leftStart;
-			mouseBox_->size.x = 0;
-			mouseBox_->size.y = 0;
+			mouseBox_->pointA = sf::Vector2f(p_event.mouseButton.x, p_event.mouseButton.y);
+			mouseBox_->pointB = mouseBox_->pointA;
 		}
 	}
 	
@@ -58,24 +55,35 @@ namespace ufa
 		if(leftPressed_) {
 			leftPressed_ = false;
 			mouseBox_->drawBox = false;
+			
+			selectUnits();
 		}
+	}
+	
+	void MouseEventHandler::selectUnits()
+	{
+		std::list<std::shared_ptr<Drawable>>::iterator it;
+		
+		//release all selected drawables
+		for(it = window_->getDrawer().drawObjects.begin(); it != window_->getDrawer().drawObjects.end(); ++it)
+			(*it)->selected = false;
+		
+		// get all drawables that are in the range of the MouseBox
+		float x = mouseBox_->getPosition().x +
+				  window_->getRenderWindow().getView().getCenter().x -
+				  (window_->getRenderWindow().getSize().x / 2);
+		float y = mouseBox_->getPosition().y +
+				  window_->getRenderWindow().getView().getCenter().y -
+				  (window_->getRenderWindow().getSize().y / 2);
+		std::list<std::shared_ptr<Drawable>> drawablesInRect= window_->getDrawer().getObjectsInRect(sf::Vector2f(x,y), mouseBox_->getSize());
+		for(it = drawablesInRect.begin(); it != drawablesInRect.end(); ++it)
+			(*it)->selected = true;
 	}
 	
 	void MouseEventHandler::processMouseMoved(const sf::Event &p_event)
 	{
 		if(leftPressed_) {
-			if(p_event.mouseMove.x < leftStart.x)
-				mouseBox_->topLeft.x = p_event.mouseMove.x;
-			else
-				mouseBox_->topLeft.x = leftStart.x;
-			
-			if(p_event.mouseMove.y < leftStart.y)
-				mouseBox_->topLeft.y = p_event.mouseMove.y;
-			else
-				mouseBox_->topLeft.y = leftStart.y;
-			
-			mouseBox_->size.x = fabs(p_event.mouseMove.x - leftStart.x);
-			mouseBox_->size.y = fabs(p_event.mouseMove.y - leftStart.y);
+			mouseBox_->pointB = sf::Vector2f(p_event.mouseMove.x, p_event.mouseMove.y);
 		}
 	}
 }

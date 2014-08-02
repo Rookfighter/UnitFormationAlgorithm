@@ -7,12 +7,12 @@
 
 namespace ufa
 {
+	/* DrawableUnit represents the visualization of an Unit. */
 	class DrawableUnit: public Drawable
 	{
 	private:
 		std::shared_ptr<Unit> unit_;
 	public:
-		bool selected_;
 		DrawableUnit(const std::shared_ptr<Unit> &p_unit);
 		~DrawableUnit();
 		

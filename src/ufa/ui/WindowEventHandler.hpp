@@ -7,6 +7,8 @@
 
 namespace ufa
 {
+	/* The WindowEventHandler handles all events related to the SFML
+	 * window. */
 	class WindowEventHandler: public EventHandler
 	{
 	private:
@@ -20,4 +22,4 @@ namespace ufa
 
 }
 
-#endif // UFA_WINDOW_EVENT_HANDLER_HPP
+#endif

@@ -11,21 +11,12 @@ namespace ufa
 
 	SimulationDrawer::~SimulationDrawer()
 	{	}
-
-	void SimulationDrawer::addDrawObject(const std::shared_ptr<Drawable> &p_drawObject)
-	{
-		drawObjects_.push_back(p_drawObject);
-	}
-	
-	void SimulationDrawer::addHudElement(const std::shared_ptr<Drawable> &p_hudElement)
-	{
-		hudElements_.push_back(p_hudElement);
-	}
 	
 	void SimulationDrawer::drawSimulation(sf::RenderTarget &p_renderTarget)
 	{
 		drawDrawObjects(p_renderTarget);
 		// create a texture on which the hud will be drawn
+		// so SFML Views don't have to be considered
 		hud.create(p_renderTarget.getSize().x, p_renderTarget.getSize().y);
 		hud.clear(sf::Color::Transparent);
 		drawHudElements(hud);
@@ -36,6 +27,7 @@ namespace ufa
 		int y = p_renderTarget.getView().getCenter().y - (p_renderTarget.getSize().y / 2);
 		hudSprite.setPosition(x, y);
 		
+		// draw the hud on the given RenderTarget
 		p_renderTarget.draw(hudSprite);
 	}
 	
@@ -45,7 +37,7 @@ namespace ufa
 		event.sizeFactor = SIZE_FACTOR;
 		
 		std::list<std::shared_ptr<Drawable>>::iterator it;
-		for(it = drawObjects_.begin(); it != drawObjects_.end(); ++it)
+		for(it = drawObjects.begin(); it != drawObjects.end(); ++it)
 			(*it)->draw(event);
 	}
 	
@@ -55,19 +47,24 @@ namespace ufa
 		event.sizeFactor = SIZE_FACTOR;
 		
 		std::list<std::shared_ptr<Drawable>>::iterator it;
-		for(it = hudElements_.begin(); it != hudElements_.end(); ++it)
+		for(it = hudElements.begin(); it != hudElements.end(); ++it)
 			(*it)->draw(event);
 	}
 	
-	std::vector<std::shared_ptr<Drawable>> SimulationDrawer::getObjectsInRect(
+	std::list<std::shared_ptr<Drawable>> SimulationDrawer::getObjectsInRect(
 					const sf::Vector2f &p_topLeft,
 					const sf::Vector2f &p_size)
 	{
+		std::list<std::shared_ptr<Drawable>> result;
 		std::list<std::shared_ptr<Drawable>>::iterator it;
-		for(it = drawObjects_.begin(); it != drawObjects_.end(); ++it) {
-			if()
+		for(it = drawObjects.begin(); it != drawObjects.end(); ++it) {
+			std::shared_ptr<Drawable> currentDrawable = *it;
+			if(currentDrawable->position.x > p_topLeft.x && currentDrawable->position.y > p_topLeft.y &&
+			   currentDrawable->position.x < p_topLeft.x + p_size.x && currentDrawable->position.y < p_topLeft.y + p_size.y)
+				   result.push_back(currentDrawable);
 		}
-
+		
+		return result;
 	}
 }
 

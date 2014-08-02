@@ -9,10 +9,11 @@ namespace ufa
 	class Drawable
 	{
 	public:
-		Drawable()
-		{ }
-		virtual ~Drawable()
-		{ }
+		sf::Vector2f position;
+		bool selected;
+		
+		Drawable(): selected(false) { }
+		virtual ~Drawable() { }
 		
 		virtual void draw(DrawEvent &p_drawEvent) = 0;
 	};

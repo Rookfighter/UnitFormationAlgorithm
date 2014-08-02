@@ -26,7 +26,7 @@ static void init()
 	unit->radius = 1;
 	
 	world->units.push_back(unit);
-	window->getDrawer().addDrawObject(drawUnit);
+	window->getDrawer().drawObjects.push_back(drawUnit);
 	simulationController->addController(unitController);
 	window->addEventHandler(std::shared_ptr<ufa::WindowEventHandler>(new ufa::WindowEventHandler(window)));
 	window->addEventHandler(std::shared_ptr<ufa::MouseEventHandler>(new ufa::MouseEventHandler(window)));
