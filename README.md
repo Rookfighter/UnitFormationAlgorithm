@@ -12,6 +12,6 @@ to execute cmake to build the binary.
 
 ## Dependencies
 
-* UFA uses SFML 2.1 for visualization.
+* UFA uses SFML 2.1 for visualization (get it [here](http://www.sfml-dev.org/))
   * The dynamic libraries have to be placed in the directory ```lib\SFML-2.1\bin```
   * The include files have to be place in the directory ```lib\SFML-2.1\include```
