@@ -1,8 +1,8 @@
-#UnitFormationAlgorithm
+# UnitFormationAlgorithm
 
 ## About
 
-UnitormationAlgorithm (UFA) is an educational project to test some algorithms to put RTS-like
+UnitFormationAlgorithm (UFA) is an educational project to test some algorithms to put RTS-like
 units in formations and let them move around.
 
 ## Build
