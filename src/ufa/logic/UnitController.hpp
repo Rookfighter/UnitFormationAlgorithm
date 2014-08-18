@@ -10,12 +10,12 @@ namespace ufa
 	class UnitController : public Controller
 	{
 	private:
-		std::shared_ptr<World> world_;
+		World &world_;
 		
 		void setVelocityOfUnits();
 		void moveUnits(const unsigned int p_usec);
 	public:
-		UnitController(const std::shared_ptr<World> &p_world);
+		UnitController(World &p_world);
 		~UnitController();
 		
 		void step(const unsigned int p_usec);

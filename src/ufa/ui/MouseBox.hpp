@@ -9,17 +9,22 @@ namespace ufa
 	class MouseBox: public Drawable
 	{
 	public:
-		sf::Vector2f pointA;
-		sf::Vector2f pointB;
+		sf::Vector2i pointA;
+		sf::Vector2i pointB;
 		bool drawBox;
 		
 		MouseBox();
 		~MouseBox();
 		
-		void draw(DrawEvent &p_drawEvent);
-		sf::Vector2f getSize();
-		sf::Vector2f getPosition();
+		void draw(sf::RenderTarget &p_renderTarget);
 		
+		sf::Vector2i topLeft();
+		sf::Vector2i botRight();
+		sf::Vector2i size();
+		
+		sf::Vector2f topLeft(sf::RenderTarget &p_renderTarget);
+		sf::Vector2f botRight(sf::RenderTarget &p_renderTarget);
+		sf::Vector2f size(sf::RenderTarget &p_renderTarget);
 	};
 
 }

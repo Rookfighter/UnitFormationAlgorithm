@@ -2,20 +2,16 @@
 #define UFA_DRAWABLE_HPP
 
 #include <SFML/Graphics.hpp>
-#include "ufa/ui/DrawEvent.hpp"
 
 namespace ufa
 {
 	class Drawable
 	{
 	public:
-		sf::Vector2f position;
-		bool selected;
-		
-		Drawable(): selected(false) { }
+		Drawable(){ }
 		virtual ~Drawable() { }
 		
-		virtual void draw(DrawEvent &p_drawEvent) = 0;
+		virtual void draw(sf::RenderTarget &p_renderTarget) = 0;
 	};
 
 }

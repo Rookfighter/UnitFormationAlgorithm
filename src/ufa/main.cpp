@@ -1,35 +1,46 @@
 #include <memory>
-#include "ufa/general/Logging.hpp"
+#include "ufa/entities/World.hpp"
+
 #include "ufa/logic/SimulationController.hpp"
 #include "ufa/logic/UnitController.hpp"
-#include "ufa/entities/World.hpp"
-#include "ufa/ui/DrawWindow.hpp"
+
+#include "ufa/ui/EventManager.hpp"
 #include "ufa/ui/MouseEventHandler.hpp"
 #include "ufa/ui/WindowEventHandler.hpp"
-#include "ufa/ui/DrawableUnit.hpp"
+#include "ufa/ui/GameDrawer.hpp"
+
 #include "ufa/general/Math.hpp"
+#include "ufa/general/Logging.hpp"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
+#define APP_NAME "UnitFormationAlgorithm"
 #define FPS 30
 
-std::shared_ptr<ufa::World> world(new ufa::World());
+ufa::World world;
+sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), APP_NAME);
+ufa::EventManager eventManager(window);
+ufa::GameDrawer gameDrawer(window);
+ufa::SimulationController simulationController;
+
+std::shared_ptr<ufa::WindowEventHandler> windowHandler(new ufa::WindowEventHandler(window));
+std::shared_ptr<ufa::MouseEventHandler> mouseHandler(new ufa::MouseEventHandler(gameDrawer));
 std::shared_ptr<ufa::UnitController> unitController(new ufa::UnitController(world));
-std::shared_ptr<ufa::SimulationController> simulationController(new ufa::SimulationController());
-std::shared_ptr<ufa::DrawWindow> window(new ufa::DrawWindow(SCREEN_WIDTH, SCREEN_HEIGHT, world));
 std::shared_ptr<ufa::Unit> unit(new ufa::Unit());
 std::shared_ptr<ufa::DrawableUnit> drawUnit(new ufa::DrawableUnit(unit));
 
 static void init()
 {
-	unit->position.set(10,10);
+	unit->position.set(0,0);
 	unit->radius = 1;
 	
-	world->units.push_back(unit);
-	window->getDrawer().drawObjects.push_back(drawUnit);
-	simulationController->addController(unitController);
-	window->addEventHandler(std::shared_ptr<ufa::WindowEventHandler>(new ufa::WindowEventHandler(window)));
-	window->addEventHandler(std::shared_ptr<ufa::MouseEventHandler>(new ufa::MouseEventHandler(window)));
+	world.units.push_back(unit);
+	simulationController.addController(unitController);
+	
+	eventManager.addEventHandler(windowHandler);
+	eventManager.addEventHandler(mouseHandler);
+	
+	gameDrawer.getUnitDrawer().addUnit(drawUnit);
 }
 
 static void run()
@@ -38,10 +49,10 @@ static void run()
 	sf::Time elapsed;
 	sf::Clock clock;
 	clock.restart();
-	while(window->getRenderWindow().isOpen()) {
-		simulationController->step(loopTime.asMicroseconds());
-		window->redraw();
-		window->processPendingEvents();
+	while(window.isOpen()) {
+		simulationController.step(loopTime.asMicroseconds());
+		gameDrawer.redraw();
+		eventManager.processPendingEvents();
 		
 		elapsed = clock.getElapsedTime();
 		if(loopTime > elapsed)

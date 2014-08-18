@@ -5,10 +5,10 @@
 namespace ufa
 {
 
-	MouseEventHandler::MouseEventHandler(const std::shared_ptr<DrawWindow> &p_window)
-	:rightPressed_(false), leftPressed_(false), window_(p_window), mouseBox_(new MouseBox)
+	MouseEventHandler::MouseEventHandler(GameDrawer &p_gameDrawer)
+	:rightPressed_(false), leftPressed_(false), gameDrawer_(p_gameDrawer), mouseBox_(new MouseBox())
 	{
-		window_->getDrawer().hudElements.push_back(mouseBox_);
+		gameDrawer_.getHudDrawer().addHudElement(mouseBox_);
 	}
 
 	MouseEventHandler::~MouseEventHandler()
@@ -45,7 +45,7 @@ namespace ufa
 		if(!leftPressed_) {
 			leftPressed_ = true;
 			mouseBox_->drawBox = true;
-			mouseBox_->pointA = sf::Vector2f(p_event.mouseButton.x, p_event.mouseButton.y);
+			mouseBox_->pointA = sf::Vector2i(p_event.mouseButton.x, p_event.mouseButton.y);
 			mouseBox_->pointB = mouseBox_->pointA;
 		}
 	}
@@ -62,28 +62,22 @@ namespace ufa
 	
 	void MouseEventHandler::selectUnits()
 	{
-		std::list<std::shared_ptr<Drawable>>::iterator it;
-		
+		std::list<std::shared_ptr<DrawableUnit>>::iterator it;
 		//release all selected drawables
-		for(it = window_->getDrawer().drawObjects.begin(); it != window_->getDrawer().drawObjects.end(); ++it)
-			(*it)->selected = false;
+		for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it)
+			(*it)->select(false);
 		
 		// get all drawables that are in the range of the MouseBox
-		float x = mouseBox_->getPosition().x +
-				  window_->getRenderWindow().getView().getCenter().x -
-				  (window_->getRenderWindow().getSize().x / 2);
-		float y = mouseBox_->getPosition().y +
-				  window_->getRenderWindow().getView().getCenter().y -
-				  (window_->getRenderWindow().getSize().y / 2);
-		std::list<std::shared_ptr<Drawable>> drawablesInRect= window_->getDrawer().getObjectsInRect(sf::Vector2f(x,y), mouseBox_->getSize());
-		for(it = drawablesInRect.begin(); it != drawablesInRect.end(); ++it)
-			(*it)->selected = true;
+		selectedUnits_ = gameDrawer_.getUnitDrawer().getUnitsInRect(mouseBox_->topLeft(gameDrawer_.getWindow()), mouseBox_->size(gameDrawer_.getWindow()));
+		
+		for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it)
+			(*it)->select(true);
 	}
 	
 	void MouseEventHandler::processMouseMoved(const sf::Event &p_event)
 	{
 		if(leftPressed_) {
-			mouseBox_->pointB = sf::Vector2f(p_event.mouseMove.x, p_event.mouseMove.y);
+			mouseBox_->pointB = sf::Vector2i(p_event.mouseMove.x, p_event.mouseMove.y);
 		}
 	}
 }

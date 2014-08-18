@@ -12,13 +12,19 @@ namespace ufa
 	{
 	private:
 		std::shared_ptr<Unit> unit_;
+		sf::Vector2f position_;
+		bool selected_;
 	public:
 		DrawableUnit(const std::shared_ptr<Unit> &p_unit);
 		~DrawableUnit();
 		
-		void draw(DrawEvent &p_drawEvent);
+		void draw(sf::RenderTarget &p_renderTarget);
+		void select(const bool p_selected);
+		bool isSelected();
+		
+		sf::Vector2f position();
 	};
 
 }
 
-#endif // UFA_DRAWABLE_UNIT_HPP
+#endif

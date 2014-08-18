@@ -3,7 +3,7 @@
 
 namespace ufa
 {
-	UnitController::UnitController(const std::shared_ptr<World> &p_world)
+	UnitController::UnitController(World &p_world)
 	:world_(p_world)
 	{ }
 
@@ -19,7 +19,7 @@ namespace ufa
 	void UnitController::setVelocityOfUnits()
 	{
 		std::list<std::shared_ptr<Unit>>::iterator it;
-		for(it = world_->units.begin(); it != world_->units.end(); ++it) {
+		for(it = world_.units.begin(); it != world_.units.end(); ++it) {
 			std::shared_ptr<Unit> currentUnit = *it;
 			if(currentUnit->moving) {
 				Vec2 diff = currentUnit->targetPosition - currentUnit->position;
@@ -36,7 +36,7 @@ namespace ufa
 	void UnitController::moveUnits(const unsigned int p_usec)
 	{
 		std::list<std::shared_ptr<Unit>>::iterator it;
-		for(it = world_->units.begin(); it != world_->units.end(); ++it) {
+		for(it = world_.units.begin(); it != world_.units.end(); ++it) {
 			std::shared_ptr<Unit> currentUnit = *it;
 			if(currentUnit->moving) {
 				Vec2 distanceToMove = (currentUnit->velocity * p_usec) / USEC_PER_SEC;
