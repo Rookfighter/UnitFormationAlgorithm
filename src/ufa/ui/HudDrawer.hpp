@@ -10,6 +10,7 @@ namespace ufa
 	class HudDrawer: public Drawable
 	{
 	private:
+		sf::View hud_;
 		std::list<std::shared_ptr<Drawable>> hudElements_;
 	public:
 		HudDrawer();

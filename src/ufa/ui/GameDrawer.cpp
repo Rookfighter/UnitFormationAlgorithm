@@ -5,7 +5,8 @@ namespace ufa
 
 	GameDrawer::GameDrawer(sf::RenderWindow &p_window)
 	:window_(p_window)
-	{	}
+	{
+	}
 
 	GameDrawer::~GameDrawer()
 	{	}
@@ -31,7 +32,7 @@ namespace ufa
 		
 		unitDrawer_.draw(window_);
 		hudDrawer_.draw(window_);
-			
+		
 		window_.display();
 	}
 	

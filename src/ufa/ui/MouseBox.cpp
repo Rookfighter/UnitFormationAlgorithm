@@ -17,12 +17,8 @@ namespace ufa
 		if(drawBox) {
 			sf::RectangleShape box;
 			
-			sf::Vector2f topLeftTmp = p_renderTarget.mapPixelToCoords(topLeft());
-			sf::Vector2f botRightTmp = p_renderTarget.mapPixelToCoords(botRight());
-			sf::Vector2f size(abs(topLeftTmp.x - botRightTmp.x), abs(topLeftTmp.y - botRightTmp.y));
-			
-			box.setSize(size);
-			box.setPosition(topLeftTmp);
+			box.setSize(sizef());
+			box.setPosition(topLeftf());
 			box.setFillColor(sf::Color::Transparent);
 			box.setOutlineColor(BOX_COLOR);
 			box.setOutlineThickness(BOX_THICKNESS);
@@ -84,6 +80,25 @@ namespace ufa
 	{
 		sf::Vector2f topLeftTmp = topLeft(p_renderTarget);
 		sf::Vector2f botRightTmp = botRight(p_renderTarget);
+		return sf::Vector2f(fabs(topLeftTmp.x - botRightTmp.x), fabs(topLeftTmp.y - botRightTmp.y));
+	}
+	
+	sf::Vector2f MouseBox::topLeftf()
+	{
+		sf::Vector2i tmp = topLeft();
+		return sf::Vector2f(tmp.x, tmp.y);
+	}
+	
+	sf::Vector2f MouseBox::botRightf()
+	{
+		sf::Vector2i tmp = botRight();
+		return sf::Vector2f(tmp.x, tmp.y);
+	}
+	
+	sf::Vector2f MouseBox::sizef()
+	{
+		sf::Vector2f topLeftTmp = topLeftf();
+		sf::Vector2f botRightTmp = botRightf();
 		return sf::Vector2f(fabs(topLeftTmp.x - botRightTmp.x), fabs(topLeftTmp.y - botRightTmp.y));
 	}
 

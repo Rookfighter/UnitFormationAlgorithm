@@ -1,4 +1,5 @@
 #include <memory>
+
 #include "ufa/entities/World.hpp"
 
 #include "ufa/logic/SimulationController.hpp"
@@ -31,6 +32,11 @@ std::shared_ptr<ufa::DrawableUnit> drawUnit(new ufa::DrawableUnit(unit));
 
 static void init()
 {
+	sf::View view = window.getDefaultView();
+	view.zoom(0.05);
+	view.setCenter(0, 0);
+	window.setView(view);
+	
 	unit->position.set(0,0);
 	unit->radius = 1;
 	

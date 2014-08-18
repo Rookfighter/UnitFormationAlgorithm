@@ -8,6 +8,10 @@ namespace ufa
 	/* This class represents a box which is can be drawn by the mouse. */
 	class MouseBox: public Drawable
 	{
+	private:
+		sf::Vector2f topLeftf();
+		sf::Vector2f botRightf();
+		sf::Vector2f sizef();
 	public:
 		sf::Vector2i pointA;
 		sf::Vector2i pointB;
