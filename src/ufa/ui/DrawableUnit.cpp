@@ -1,15 +1,18 @@
 #include "ufa/ui/DrawableUnit.hpp"
+#include "ufa/general/Math.hpp"
 
 #define CIRCLE_THICKNESS 0.1f
 #define RECT_THICKNESS 0.1f
+#define LINE_THICKNESS 0.05f
 #define UNIT_COLOR sf::Color::Green
 #define SELECTED_COLOR sf::Color::Red
+#define TARGET_COLOR sf::Color::Blue
 
 namespace ufa
 {
 
-	DrawableUnit::DrawableUnit(const std::shared_ptr<Unit> &p_unit)
-	:selected_(false), unit_(p_unit)
+	DrawableUnit::DrawableUnit(const std::shared_ptr<UnitController> &p_unitController)
+	:selected_(false), unitController_(p_unitController)
 	{	}
 
 	DrawableUnit::~DrawableUnit()
@@ -17,19 +20,36 @@ namespace ufa
 	
 	void DrawableUnit::draw(sf::RenderTarget &p_renderTarget)
 	{
-		float midRadius = unit_->radius / 8;
-		sf::CircleShape mid;
-		mid.setRadius(midRadius);
+		float midRadius = unitController_->getUnit()->radius / 8;
+		float circleRadius = unitController_->getUnit()->radius - CIRCLE_THICKNESS;
+		position_.x = unitController_->getUnit()->position.x;
+		position_.y = unitController_->getUnit()->position.y;
+		
+		if(unitController_->getUnit()->moving) {
+			sf::CircleShape targetCircle(midRadius);
+			targetCircle.setFillColor(TARGET_COLOR);
+			targetCircle.setPosition(unitController_->getUnit()->targetPosition.x - targetCircle.getRadius(), unitController_->getUnit()->targetPosition.y - targetCircle.getRadius());
+			
+			sf::Vector2f diff((unitController_->getUnit()->targetPosition - unitController_->getUnit()->position).length(),
+							  LINE_THICKNESS);
+			sf::RectangleShape targetLine(diff);
+			targetLine.setPosition(position_);
+			targetLine.rotate(radianToDegree(atan2(unitController_->getUnit()->targetPosition.y - unitController_->getUnit()->position.y,
+												   unitController_->getUnit()->targetPosition.x - unitController_->getUnit()->position.x)));
+			targetLine.setFillColor(TARGET_COLOR);
+			
+			p_renderTarget.draw(targetCircle);
+			p_renderTarget.draw(targetLine);
+		}
+		
+		sf::CircleShape mid(midRadius);
 		mid.setFillColor(UNIT_COLOR);
 		
-		float circleRadius = unit_->radius - CIRCLE_THICKNESS;
 		sf::CircleShape circle(circleRadius);
 		circle.setFillColor(sf::Color::Transparent);
 		circle.setOutlineThickness(CIRCLE_THICKNESS);
 		circle.setOutlineColor(UNIT_COLOR);
 		
-		position_.x = unit_->position.x;
-		position_.y = unit_->position.y;
 		mid.setPosition(position_.x -  midRadius, position_.y - midRadius);
 		circle.setPosition(position_.x - circleRadius, position_.y - circleRadius);
 		
@@ -48,8 +68,8 @@ namespace ufa
 			
 			topLeft.x -= 1;
 			topLeft.y -= 1;
-			botRight.x += 1;
-			botRight.y += 1;
+			botRight.x += 2;
+			botRight.y += 2;
 			
 			sf::Vector2f topLeftf = p_renderTarget.mapPixelToCoords(topLeft);
 			sf::Vector2f botRightf = p_renderTarget.mapPixelToCoords(botRight);
@@ -74,6 +94,11 @@ namespace ufa
 	sf::Vector2f DrawableUnit::position()
 	{
 		return position_;
+	}
+	
+	std::shared_ptr<UnitController>& DrawableUnit::getUnitController()
+	{
+		return unitController_;
 	}
 }
 

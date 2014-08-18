@@ -11,14 +11,18 @@ namespace ufa
 	{
 	private:
 		World &world_;
+		std::shared_ptr<Unit> unit_;
 		
-		void setVelocityOfUnits();
-		void moveUnits(const unsigned int p_usec);
+		void setVelocityOfUnit(const unsigned int p_usec);
+		void moveUnit(const unsigned int p_usec);
 	public:
 		UnitController(World &p_world);
 		~UnitController();
 		
 		void step(const unsigned int p_usec);
+		void setTarget(const Vec2 &p_target);
+		
+		std::shared_ptr<Unit>& getUnit();
 	};
 
 }

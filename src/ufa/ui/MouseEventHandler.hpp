@@ -19,6 +19,8 @@ namespace ufa
 		
 		void processLeftMouseButtonPressed(const sf::Event &p_event);
 		void processLeftMouseButtonReleased(const sf::Event &p_event);
+		void processRightMouseButtonPressed(const sf::Event &p_event);
+		void processRightMouseButtonReleased(const sf::Event &p_event);
 		void selectUnits();
 		void processMouseMoved(const sf::Event &p_event);
 	public:

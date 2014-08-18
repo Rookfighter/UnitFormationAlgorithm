@@ -21,10 +21,14 @@ namespace ufa
 			case sf::Event::MouseButtonPressed:
 				if(p_event.mouseButton.button == sf::Mouse::Left)
 					processLeftMouseButtonPressed(p_event);
+				else if(p_event.mouseButton.button == sf::Mouse::Right)
+					processRightMouseButtonPressed(p_event);
 				break;
 			case sf::Event::MouseButtonReleased:
 				if(p_event.mouseButton.button == sf::Mouse::Left)
 					processLeftMouseButtonReleased(p_event);
+				else if(p_event.mouseButton.button == sf::Mouse::Right)
+					processRightMouseButtonReleased(p_event);
 				break;
 			case sf::Event::MouseEntered:
 				break;
@@ -72,6 +76,27 @@ namespace ufa
 		
 		for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it)
 			(*it)->select(true);
+	}
+	
+	void MouseEventHandler::processRightMouseButtonPressed(const sf::Event &p_event)
+	{
+		if(!rightPressed_) {
+			rightPressed_ = true;
+		}
+	}
+	
+	void MouseEventHandler::processRightMouseButtonReleased(const sf::Event &p_event)
+	{
+		if(rightPressed_) {
+			rightPressed_ = false;
+			
+			std::list<std::shared_ptr<DrawableUnit>>::iterator it;
+			for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it) {
+				sf::Vector2f tmp = gameDrawer_.getWindow().mapPixelToCoords(sf::Vector2i(p_event.mouseButton.x, p_event.mouseButton.y));
+				(*it)->getUnitController()->setTarget(Vec2(tmp.x, tmp.y));
+				
+			}
+		}
 	}
 	
 	void MouseEventHandler::processMouseMoved(const sf::Event &p_event)

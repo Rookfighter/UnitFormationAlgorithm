@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "ufa/ui/Drawable.hpp"
-#include "ufa/entities/Unit.hpp"
+#include "ufa/logic/UnitController.hpp"
 
 namespace ufa
 {
@@ -11,11 +11,11 @@ namespace ufa
 	class DrawableUnit: public Drawable
 	{
 	private:
-		std::shared_ptr<Unit> unit_;
+		std::shared_ptr<UnitController> unitController_;
 		sf::Vector2f position_;
 		bool selected_;
 	public:
-		DrawableUnit(const std::shared_ptr<Unit> &p_unit);
+		DrawableUnit(const std::shared_ptr<UnitController> &p_unitController);
 		~DrawableUnit();
 		
 		void draw(sf::RenderTarget &p_renderTarget);
@@ -23,6 +23,7 @@ namespace ufa
 		bool isSelected();
 		
 		sf::Vector2f position();
+		std::shared_ptr<UnitController>& getUnitController();
 	};
 
 }

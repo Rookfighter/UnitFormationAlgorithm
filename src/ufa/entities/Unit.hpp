@@ -14,7 +14,6 @@ namespace ufa
 		Vec2 velocity;
 		float maxVelocity;
 		Vec2 targetPosition;
-		std::deque<Vec2> path;
 		bool moving;
 		
 		Unit();

@@ -1,48 +1,61 @@
 #include "ufa/logic/UnitController.hpp"
 #include "ufa/general/Math.hpp"
+#include "ufa/general/Logging.hpp"
+
+#define POSITION_EPS 0.001f
 
 namespace ufa
 {
 	UnitController::UnitController(World &p_world)
-	:world_(p_world)
-	{ }
+	:world_(p_world), unit_(new Unit())
+	{
+		world_.units.push_back(unit_);
+	}
 
 	UnitController::~UnitController()
-	{ }
+	{
+	}
 	
 	void UnitController::step(const unsigned int p_usec)
 	{
-		setVelocityOfUnits();
-		moveUnits(p_usec);
+		setVelocityOfUnit(p_usec);
+		moveUnit(p_usec);
 	}
 	
-	void UnitController::setVelocityOfUnits()
+	void UnitController::setVelocityOfUnit(const unsigned int p_usec)
 	{
-		std::list<std::shared_ptr<Unit>>::iterator it;
-		for(it = world_.units.begin(); it != world_.units.end(); ++it) {
-			std::shared_ptr<Unit> currentUnit = *it;
-			if(currentUnit->moving) {
-				Vec2 diff = currentUnit->targetPosition - currentUnit->position;
-				
-				// check if distance is higher than maximum velocity and decide how to set velocity
-				if(diff.lengthSQ() > (currentUnit->maxVelocity * currentUnit->maxVelocity))
-					currentUnit->velocity = (diff / diff.length()) * currentUnit->maxVelocity;
-				else
-					currentUnit->velocity = diff;
-			}
+		if(unit_->moving) {
+			Vec2 diff = unit_->targetPosition - unit_->position;
+			// check if distance is higher than maximum velocity and decide how to set velocity
+			if(diff.lengthSQ() > (unit_->maxVelocity * unit_->maxVelocity * usecToSec(p_usec) * usecToSec(p_usec)))
+				unit_->velocity = (diff / diff.length()) * unit_->maxVelocity;
+			else
+				unit_->velocity = diff;
+		}
+			
+	}
+	
+	void UnitController::moveUnit(const unsigned int p_usec)
+	{
+		if(unit_->moving) {
+			Vec2 distanceToMove = unit_->velocity * usecToSec(p_usec);
+			unit_->position += distanceToMove;
+			
+			if(sameFloat(unit_->position.x, unit_->targetPosition.x, POSITION_EPS) &&
+			   sameFloat(unit_->position.y, unit_->targetPosition.y, POSITION_EPS))
+				   unit_->moving = false;
 		}
 	}
 	
-	void UnitController::moveUnits(const unsigned int p_usec)
+	void UnitController::setTarget(const Vec2 &p_target)
 	{
-		std::list<std::shared_ptr<Unit>>::iterator it;
-		for(it = world_.units.begin(); it != world_.units.end(); ++it) {
-			std::shared_ptr<Unit> currentUnit = *it;
-			if(currentUnit->moving) {
-				Vec2 distanceToMove = (currentUnit->velocity * p_usec) / USEC_PER_SEC;
-				currentUnit->position += distanceToMove;
-			}
-		}
+		unit_->targetPosition = p_target;
+		unit_->moving = true;
+	}
+		
+	std::shared_ptr<Unit>& UnitController::getUnit()
+	{
+		return unit_;
 	}
 }
 

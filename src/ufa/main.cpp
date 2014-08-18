@@ -27,8 +27,7 @@ ufa::SimulationController simulationController;
 std::shared_ptr<ufa::WindowEventHandler> windowHandler(new ufa::WindowEventHandler(window));
 std::shared_ptr<ufa::MouseEventHandler> mouseHandler(new ufa::MouseEventHandler(gameDrawer));
 std::shared_ptr<ufa::UnitController> unitController(new ufa::UnitController(world));
-std::shared_ptr<ufa::Unit> unit(new ufa::Unit());
-std::shared_ptr<ufa::DrawableUnit> drawUnit(new ufa::DrawableUnit(unit));
+std::shared_ptr<ufa::DrawableUnit> drawUnit(new ufa::DrawableUnit(unitController));
 
 static void init()
 {
@@ -37,10 +36,9 @@ static void init()
 	view.setCenter(0, 0);
 	window.setView(view);
 	
-	unit->position.set(0,0);
-	unit->radius = 1;
+	unitController->getUnit()->position.set(0,0);
+	unitController->getUnit()->radius = 1;
 	
-	world.units.push_back(unit);
 	simulationController.addController(unitController);
 	
 	eventManager.addEventHandler(windowHandler);
@@ -51,7 +49,7 @@ static void init()
 
 static void run()
 {
-	sf::Time loopTime = sf::microseconds(FPS_TO_USEC(FPS));
+	sf::Time loopTime = sf::microseconds(ufa::fpsToUsec(FPS));
 	sf::Time elapsed;
 	sf::Clock clock;
 	clock.restart();
