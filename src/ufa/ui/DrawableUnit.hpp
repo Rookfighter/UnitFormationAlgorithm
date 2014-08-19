@@ -14,6 +14,11 @@ namespace ufa
 		std::shared_ptr<UnitController> unitController_;
 		sf::Vector2f position_;
 		bool selected_;
+		
+		void updatePosition();
+		void drawTarget(sf::RenderTarget &p_renderTarget);
+		void drawUnit(sf::RenderTarget &p_renderTarget);
+		void drawSelection(const sf::Vector2f &p_position, const sf::Vector2f &p_size, sf::RenderTarget &p_renderTarget);
 	public:
 		DrawableUnit(const std::shared_ptr<UnitController> &p_unitController);
 		~DrawableUnit();

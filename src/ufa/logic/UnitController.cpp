@@ -30,7 +30,7 @@ namespace ufa
 			if(diff.lengthSQ() > (unit_->maxVelocity * unit_->maxVelocity * usecToSec(p_usec) * usecToSec(p_usec)))
 				unit_->velocity = (diff / diff.length()) * unit_->maxVelocity;
 			else
-				unit_->velocity = diff;
+				unit_->velocity = diff / usecToSec(p_usec);
 		}
 			
 	}
@@ -42,13 +42,17 @@ namespace ufa
 			unit_->position += distanceToMove;
 			
 			if(sameFloat(unit_->position.x, unit_->targetPosition.x, POSITION_EPS) &&
-			   sameFloat(unit_->position.y, unit_->targetPosition.y, POSITION_EPS))
+			   sameFloat(unit_->position.y, unit_->targetPosition.y, POSITION_EPS)) {
 				   unit_->moving = false;
+				   PRINT_INFO("Reached Target: %s.", unit_->targetPosition.str().c_str());
+			   }
+				   
 		}
 	}
 	
 	void UnitController::setTarget(const Vec2 &p_target)
 	{
+		PRINT_INFO("Moving to Target: %s.", p_target.str().c_str());
 		unit_->targetPosition = p_target;
 		unit_->moving = true;
 	}
