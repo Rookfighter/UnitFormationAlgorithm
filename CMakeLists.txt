@@ -9,7 +9,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CDL_MODULES_PATH})
 find_package(SFML REQUIRED)
 
 include_directories("src" ${SFML_INCLUDE_DIRS})
-file(GLOB UFA_SRC "src/ufa/*.cpp" "src/ufa/entities/*.cpp" "src/ufa/ui/*.cpp" "src/ufa/logic/*.cpp" "src/ufa/general/*.cpp")
+file(GLOB UFA_SRC
+	"src/ufa/main.cpp"
+	"src/ufa/entities/*.cpp"
+	"src/ufa/ui/*.cpp"
+	"src/ufa/logic/*.cpp"
+	"src/ufa/general/*.cpp"
+	"src/ufa/app/*.cpp")
 
 add_executable(${PROJECT_NAME} ${UFA_SRC})
 target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})

@@ -16,7 +16,7 @@ namespace ufa
 		void setVelocityOfUnit(const unsigned int p_usec);
 		void moveUnit(const unsigned int p_usec);
 	public:
-		UnitController(World &p_world);
+		UnitController(const std::shared_ptr<Unit> &p_unit, World &p_world);
 		~UnitController();
 		
 		void step(const unsigned int p_usec);

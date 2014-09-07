@@ -26,4 +26,4 @@ namespace ufa
 
 }
 
-#endif // UFA_EVENT_MANAGER_HPP
+#endif

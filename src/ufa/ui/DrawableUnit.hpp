@@ -14,6 +14,7 @@ namespace ufa
 		std::shared_ptr<UnitController> unitController_;
 		sf::Vector2f position_;
 		bool selected_;
+		sf::Color unitColor_;
 		
 		void updatePosition();
 		void drawTarget(sf::RenderTarget &p_renderTarget);

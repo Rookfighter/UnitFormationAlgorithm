@@ -6,10 +6,10 @@
 
 namespace ufa
 {
-	UnitController::UnitController(World &p_world)
-	:world_(p_world), unit_(new Unit())
+	UnitController::UnitController(const std::shared_ptr<Unit> &p_unit, World &p_world)
+	:world_(p_world), unit_(p_unit)
 	{
-		world_.units.push_back(unit_);
+		
 	}
 
 	UnitController::~UnitController()

@@ -1,24 +1,39 @@
 #ifndef UFA_UNIT_HPP
 #define UFA_UNIT_HPP
 
-#include <deque>
 #include "ufa/entities/Vec2.hpp"
+
+#define RANGE_TYPE_CLOSE 0
+#define RANGE_TYPE_RANGED 1
 
 namespace ufa
 {
+	enum UnitType {MELEE, RANGED};
+	
+	/* Unit is a simple entity that contains all information about
+	 * a Unit like its position, velocity, radius, etc. */
 	class Unit
 	{
 	public:
 		Vec2 position;
-		float radius;
+		float innerRadius;
+		float outerRadius;
+		
 		Vec2 velocity;
 		float maxVelocity;
+		
+		const UnitType unitType;
+		int rangeType;
+		
 		Vec2 targetPosition;
 		bool moving;
 		
-		Unit();
-		Unit(const Vec2 &p_position, const float p_radius);
-		~Unit();
+		Unit(const UnitType p_unitType,
+			 const int p_rangeType,
+			 const float p_innerRadius, 
+			 const float p_outerRadius,
+			 const float p_maxVeloxity);
+		virtual ~Unit();
 
 	};
 }
