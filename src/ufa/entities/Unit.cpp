@@ -3,7 +3,7 @@
 namespace ufa
 {
 	Unit::Unit(const UnitType p_unitType,
-			   const int p_rangeType,
+			   const RangeType p_rangeType,
 			   const float p_innerRadius, 
 			   const float p_outerRadius,
 			   const float p_maxVeloxity)

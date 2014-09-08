@@ -1,7 +1,7 @@
 #include "ufa/entities/MeleeUnit.hpp"
 
 #define UNIT_TYPE MELEE
-#define RANGE_TYPE RANGE_TYPE_CLOSE
+#define RANGE_TYPE CLOSE
 #define INNER_RADIUS 0.3f
 #define OUTER_RADIUS 1.0f
 #define MAX_VELOCITY 5.0f

@@ -8,26 +8,14 @@
 #define TARGET_COLOR sf::Color::Blue
 
 #define DEFAULT_UNIT_COLOR sf::Color::Magenta
-#define MELEE_UNIT_COLOR sf::Color::Green
-#define RANGED_UNIT_COLOR sf::Color::Yellow
 
 namespace ufa
 {
 
-	DrawableUnit::DrawableUnit(const std::shared_ptr<UnitController> &p_unitController)
-		:selected_(false), unitController_(p_unitController)
+	DrawableUnit::DrawableUnit(const std::shared_ptr<UnitController> &p_unitController, const sf::Color p_unitcolor)
+		:selected_(false), unitController_(p_unitController), unitColor_(p_unitcolor)
 	{
-		switch(unitController_->getUnit()->unitType) {
-		case MELEE:
-			unitColor_ = MELEE_UNIT_COLOR;
-			break;
-		case RANGED:
-			unitColor_ = RANGED_UNIT_COLOR;
-			break;
-		default:
-			unitColor_ = DEFAULT_UNIT_COLOR;
-			break;
-		}
+		
 	}
 
 	DrawableUnit::~DrawableUnit()

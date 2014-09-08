@@ -8,7 +8,8 @@
 
 namespace ufa
 {
-	enum UnitType {MELEE, RANGED};
+	enum RangeType {CLOSE, RANGED};
+	enum UnitType {MELEE, ARCHER};
 	
 	/* Unit is a simple entity that contains all information about
 	 * a Unit like its position, velocity, radius, etc. */
@@ -23,13 +24,13 @@ namespace ufa
 		float maxVelocity;
 		
 		const UnitType unitType;
-		int rangeType;
+		RangeType rangeType;
 		
 		Vec2 targetPosition;
 		bool moving;
 		
 		Unit(const UnitType p_unitType,
-			 const int p_rangeType,
+			 const RangeType p_rangeType,
 			 const float p_innerRadius, 
 			 const float p_outerRadius,
 			 const float p_maxVeloxity);

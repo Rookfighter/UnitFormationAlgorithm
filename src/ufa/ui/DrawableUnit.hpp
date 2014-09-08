@@ -21,8 +21,8 @@ namespace ufa
 		void drawUnit(sf::RenderTarget &p_renderTarget);
 		void drawSelection(const sf::Vector2f &p_position, const sf::Vector2f &p_size, sf::RenderTarget &p_renderTarget);
 	public:
-		DrawableUnit(const std::shared_ptr<UnitController> &p_unitController);
-		~DrawableUnit();
+		DrawableUnit(const std::shared_ptr<UnitController> &p_unitController, const sf::Color p_unitcolor);
+		virtual ~DrawableUnit();
 		
 		void draw(sf::RenderTarget &p_renderTarget);
 		void select(const bool p_selected);

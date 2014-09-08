@@ -1,8 +1,6 @@
 #ifndef UFA_GAME_FACTORY_HPP
 #define UFA_GAME_FACTORY_HPP
 
-#include "ufa/entities/MeleeUnit.hpp"
-#include "ufa/entities/RangedUnit.hpp"
 #include "ufa/entities/World.hpp"
 #include "ufa/logic/SimulationController.hpp"
 #include "ufa/logic/UnitController.hpp"

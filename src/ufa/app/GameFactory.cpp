@@ -1,3 +1,7 @@
+#include "ufa/entities/MeleeUnit.hpp"
+#include "ufa/entities/ArcherUnit.hpp"
+#include "ufa/ui/DrawableMeleeUnit.hpp"
+#include "ufa/ui/DrawableArcherUnit.hpp"
 #include "ufa/app/GameFactory.hpp"
 
 #define DEFAULT_WIDTH 800
@@ -24,7 +28,7 @@ namespace ufa
 		CreatedUnit result;
 		result.unit = std::shared_ptr<Unit>(new MeleeUnit());
 		result.controller = std::shared_ptr<UnitController>(new UnitController(result.unit, world_));
-		result.drawable = std::shared_ptr<DrawableUnit>(new DrawableUnit(result.controller));
+		result.drawable = std::shared_ptr<DrawableUnit>(new DrawableMeleeUnit(result.controller));
 
 		world_.units.push_back(result.unit);
 		simController_.addController(result.controller);
@@ -36,9 +40,9 @@ namespace ufa
 	CreatedUnit GameFactory::createRangedUnit()
 	{
 		CreatedUnit result;
-		result.unit = std::shared_ptr<Unit>(new RangedUnit());
+		result.unit = std::shared_ptr<Unit>(new ArcherUnit());
 		result.controller = std::shared_ptr<UnitController>(new UnitController(result.unit, world_));
-		result.drawable = std::shared_ptr<DrawableUnit>(new DrawableUnit(result.controller));
+		result.drawable = std::shared_ptr<DrawableUnit>(new DrawableArcherUnit(result.controller));
 
 		world_.units.push_back(result.unit);
 		simController_.addController(result.controller);

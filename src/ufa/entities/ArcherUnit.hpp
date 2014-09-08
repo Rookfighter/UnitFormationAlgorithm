@@ -6,11 +6,11 @@
 namespace ufa
 {
 
-	class RangedUnit : public Unit
+	class ArcherUnit : public Unit
 	{
 	public:
-		RangedUnit();
-		~RangedUnit();
+		ArcherUnit();
+		~ArcherUnit();
 
 	};
 
