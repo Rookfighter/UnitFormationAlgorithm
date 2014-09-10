@@ -8,7 +8,7 @@
 
 namespace ufa
 {
-	enum RangeType {CLOSE, RANGED};
+	enum RangeType {CLOSE = 0, RANGED};
 	enum UnitType {MELEE, ARCHER};
 	
 	/* Unit is a simple entity that contains all information about

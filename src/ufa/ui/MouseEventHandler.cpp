@@ -5,8 +5,8 @@
 namespace ufa
 {
 
-	MouseEventHandler::MouseEventHandler(GameDrawer &p_gameDrawer)
-	:rightPressed_(false), leftPressed_(false), gameDrawer_(p_gameDrawer), mouseBox_(new MouseBox())
+	MouseEventHandler::MouseEventHandler(GameDrawer &p_gameDrawer, GameFactory &p_factory)
+	:rightPressed_(false), leftPressed_(false), gameDrawer_(p_gameDrawer), mouseBox_(new MouseBox()), gameFactory_(p_factory)
 	{
 		gameDrawer_.getHudDrawer().addHudElement(mouseBox_);
 	}
@@ -90,12 +90,16 @@ namespace ufa
 		if(rightPressed_) {
 			rightPressed_ = false;
 			
+			sf::Vector2f targetPos = gameDrawer_.getWindow().mapPixelToCoords(sf::Vector2i(p_event.mouseButton.x, p_event.mouseButton.y));
+			std::vector<std::shared_ptr<Unit>> units;
+			units.reserve(selectedUnits_.size());
+			
 			std::list<std::shared_ptr<DrawableUnit>>::iterator it;
 			for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it) {
-				sf::Vector2f tmp = gameDrawer_.getWindow().mapPixelToCoords(sf::Vector2i(p_event.mouseButton.x, p_event.mouseButton.y));
-				(*it)->getUnitController()->setTarget(Vec2(tmp.x, tmp.y));
-				
+				units.push_back((*it)->getUnitController()->getUnit());
 			}
+			
+			gameFactory_.createBlockFormation(units)->formUpAt(Vec2(targetPos.x, targetPos.y));
 		}
 	}
 	

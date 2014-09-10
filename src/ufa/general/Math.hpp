@@ -2,6 +2,7 @@
 #define UFA_MATH_HPP
 
 #include <cmath>
+#include "ufa/entities/Vec2.hpp"
 
 #ifndef M_PI
 #define M_PI (3.14159265359)
@@ -24,6 +25,8 @@ namespace ufa
 	
 	float radianToDegree(const float p_radian);
 	float degreeToRadian(const float p_degree);
+	
+	Vec2 rotateVector(const Vec2 &p_vector, const float p_radian);
 }
 
 #endif

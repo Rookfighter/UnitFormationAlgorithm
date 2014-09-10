@@ -36,4 +36,17 @@ namespace ufa
 	{
 		return p_degree * M_PI / 180.0f;
 	}
+	
+	Vec2 rotateVector(const Vec2 &p_vector, const float p_radian)
+	{
+		Vec2 result;
+		
+		float cs = cos(p_radian);
+		float sn = sin(p_radian);
+		
+		result.x = p_vector.x * cs - p_vector.y * sn;
+		result.y = p_vector.x * sn + p_vector.y * cs;
+		
+		return result;
+	}
 }

@@ -4,6 +4,7 @@
 #include "ufa/entities/World.hpp"
 #include "ufa/logic/SimulationController.hpp"
 #include "ufa/logic/UnitController.hpp"
+#include "ufa/logic/BlockFormationController.hpp"
 #include "ufa/ui/DrawableUnit.hpp"
 #include "ufa/ui/GameDrawer.hpp"
 #include "ufa/ui/Eventmanager.hpp"
@@ -18,6 +19,7 @@ namespace ufa
 		std::shared_ptr<DrawableUnit> drawable;
 	} CreatedUnit;
 	
+	class MouseEventHandler;
 	class GameFactory
 	{
 	private:
@@ -33,6 +35,8 @@ namespace ufa
 		
 		CreatedUnit createMeleeUnit();
 		CreatedUnit createRangedUnit();
+		std::shared_ptr<BlockFormationController> createBlockFormation(const std::vector<std::shared_ptr<Unit>> &p_units);
+		
 		
 		std::shared_ptr<WindowEventHandler> createWindowEventHandler();
 		std::shared_ptr<MouseEventHandler> createMouseEventHandler();

@@ -50,6 +50,14 @@ namespace ufa
 
 		return result;
 	}
+	
+	std::shared_ptr<BlockFormationController> GameFactory::createBlockFormation(const std::vector<std::shared_ptr<Unit>> &p_units)
+	{
+		std::shared_ptr<BlockFormationController> result(new BlockFormationController(p_units));
+		simController_.addController(result);
+		
+		return result;
+	}
 
 	std::shared_ptr<WindowEventHandler> GameFactory::createWindowEventHandler()
 	{
@@ -61,7 +69,7 @@ namespace ufa
 
 	std::shared_ptr<MouseEventHandler> GameFactory::createMouseEventHandler()
 	{
-		std::shared_ptr<MouseEventHandler> mouseHandler(new MouseEventHandler(gameDrawer_));
+		std::shared_ptr<MouseEventHandler> mouseHandler(new MouseEventHandler(gameDrawer_, *this));
 		eventManager_.addEventHandler(mouseHandler);
 		return mouseHandler;
 	}
