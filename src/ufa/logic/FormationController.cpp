@@ -4,12 +4,17 @@
 namespace ufa
 {
 
-	FormationController::FormationController(const std::vector<std::shared_ptr<Unit>> &p_units)
+	FormationController::FormationController(const std::vector<std::shared_ptr<Unit>> &p_units,
+											 FormationShape *p_formationShape,
+											 FormationPlacement *p_formationPlacement)
+	:formationShape_(p_formationShape), formationPlacement_(p_formationPlacement)
 	{
-		formation_.units.resize(p_units.size());
+		formation_.units.reserve(p_units.size());
 		for(int i = 0; i < p_units.size(); ++i) {
-			formation_.units[i].unit = p_units[i];
+			formation_.units.push_back(FormationUnit());
+			formation_.units.back().unit = p_units[i];
 		}
+			
 	}
 
 	FormationController::~FormationController()
@@ -30,16 +35,17 @@ namespace ufa
 	void FormationController::formUpAt(const Vec2 &p_position)
 	{
 		formation_.center = p_position;
-		calcUnitPositions();
-		calcUnitTargetPositions();
+		formationShape_->calcFormationPositions(formation_);
+		formationPlacement_->placeUnits(formation_);
+		setUnitTargetPositions();
 		formation_.state = FORMING;
 	}
 	
-	void FormationController::calcUnitTargetPositions()
+	void FormationController::setUnitTargetPositions()
 	{
 		for(int i = 0; i < formation_.units.size(); ++i) {
 			formation_.units[i].unit->targetPosition = formation_.center;
-			formation_.units[i].unit->targetPosition += rotateVector(formation_.units[i].formationPosition, formation_.orientation);
+			formation_.units[i].unit->targetPosition += rotateVector(formation_.units[i].position, formation_.orientation);
 			formation_.units[i].unit->moving = true;
 		}
 	}

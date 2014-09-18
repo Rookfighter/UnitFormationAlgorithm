@@ -13,7 +13,7 @@ namespace ufa
 	{
 	public:
 		std::shared_ptr<Unit> unit;
-		Vec2 formationPosition;
+		Vec2 position;
 	};
 	
 	class Formation

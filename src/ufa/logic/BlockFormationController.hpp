@@ -8,13 +8,6 @@ namespace ufa
 
 	class BlockFormationController : public ufa::FormationController
 	{
-	private:
-		int rows_;
-		int rowLength_;
-		
-		float getMaxRadius();
-	protected:
-		virtual void calcUnitPositions();
 	public:
 		BlockFormationController(const std::vector<std::shared_ptr<Unit>> &p_units);
 		~BlockFormationController();
