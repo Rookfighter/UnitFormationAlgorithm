@@ -1,6 +1,5 @@
 #include "ufa/logic/UnitController.hpp"
 #include "ufa/general/Math.hpp"
-#include "ufa/general/Logging.hpp"
 
 #define POSITION_EPS 0.001f
 
@@ -44,7 +43,6 @@ namespace ufa
 			if(sameFloat(unit_->position.x, unit_->targetPosition.x, POSITION_EPS) &&
 			   sameFloat(unit_->position.y, unit_->targetPosition.y, POSITION_EPS)) {
 				   unit_->moving = false;
-				   PRINT_INFO("Reached Target: %s.", unit_->targetPosition.str().c_str());
 			   }
 				   
 		}
@@ -52,7 +50,6 @@ namespace ufa
 	
 	void UnitController::setTarget(const Vec2 &p_target)
 	{
-		PRINT_INFO("Moving to Target: %s.", p_target.str().c_str());
 		unit_->targetPosition = p_target;
 		unit_->moving = true;
 	}

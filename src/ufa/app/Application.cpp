@@ -4,6 +4,7 @@
 #include "ufa/general/Math.hpp"
 
 #define UNIT_COUNT 8
+#define APP_NAME "Unit Formation"
 
 namespace ufa
 {
@@ -14,6 +15,7 @@ namespace ufa
 		view.zoom(0.05);
 		view.setCenter(0, 0);
 		gameFactory_.getRenderWindow().setView(view);
+		gameFactory_.getRenderWindow().setTitle(APP_NAME);
 		
 		gameFactory_.createMouseEventHandler();
 		gameFactory_.createWindowEventHandler();
