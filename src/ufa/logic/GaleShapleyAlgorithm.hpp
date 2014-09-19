@@ -22,7 +22,7 @@ namespace ufa
 		Vec2 position;
 		std::vector<float> distances;
 		std::vector<GaleShapleyRelationship> preferredWomen;
-		int currentWoman;
+		int nextWoman;
 		int engagedTo;
 	};
 	

@@ -27,7 +27,6 @@ namespace ufa
 
 	void GaleShapleyAlgorithm::init(Formation& p_formation)
 	{
-		PRINT_INFO("Initializing Gale Shapley.");
 		formation_ = &p_formation;
 		
 		currentMan_ = 0;
@@ -36,7 +35,7 @@ namespace ufa
 		women_.resize(formation_->units.size());
 		for(int i = 0; i < formation_->units.size(); ++i) {
 			women_[i].id = i;
-			women_[i].position = formation_->center + formation_->units[i].position;
+			women_[i].position = formation_->units[i].position;
 			women_[i].engagedTo = -1;
 		}
 		
@@ -44,7 +43,7 @@ namespace ufa
 		men_.resize(formation_->units.size());
 		for(int i = 0; i < formation_->units.size(); ++i) {
 			men_[i].id = i;
-			men_[i].currentWoman = 0;
+			men_[i].nextWoman = 0;
 			men_[i].engagedTo = -1;
 			men_[i].position = formation_->units[i].unit->position;
 			men_[i].next = i + 1;
@@ -53,7 +52,7 @@ namespace ufa
 			men_[i].distances.resize(women_.size());
 			for(int j = 0; j < women_.size(); ++j) {
 				men_[i].preferredWomen[j].womanID = j;
-				men_[i].distances[j] = (women_[j].position - men_[i].position).lengthSQ();
+				men_[i].distances[j] = ((formation_->center + women_[j].position) - men_[i].position).lengthSQ();
 				men_[i].preferredWomen[j].distance = men_[i].distances[j];
 			}
 
@@ -66,15 +65,18 @@ namespace ufa
 	{
 		while(currentMan_ != -1) {
 			currentWoman_ = nextPreferredWoman(currentMan_);
-			men_[currentMan_].currentWoman++;
-			PRINT_INFO("Checking Man %d and Woman %d.", currentMan_, currentWoman_);
+			men_[currentMan_].nextWoman++;
+			
+			PRINT_INFO("Man %d.", currentMan_);
 			
 			if(womanIsEngaged(currentWoman_)) {
 				int rival = women_[currentWoman_].engagedTo;
-				PRINT_INFO("-- Rival is %d.", rival);
+				PRINT_INFO("-- Woman is engaged.");
+				PRINT_INFO("-- Man dist=%.2f; Rival dist = %.2f.", men_[currentMan_].distances[currentWoman_], men_[rival].distances[currentWoman_]);
+				
 				if(men_[currentMan_].distances[currentWoman_] < men_[rival].distances[currentWoman_]) {
 					// current man is more attractive
-					PRINT_INFO("-- current is more attractive.");
+					PRINT_INFO("-- Current is more attractive.");
 					men_[rival].next = men_[currentMan_].next;
 					men_[currentMan_].next = rival;
 					men_[rival].engagedTo = -1;
@@ -82,12 +84,12 @@ namespace ufa
 					engage(currentMan_, currentWoman_);
 				} else {
 					// next try
-					PRINT_INFO("-- Next try.");
+					PRINT_INFO("-- Next try");
 					continue;
 				}
 			} else {
 				// woman is not engaged
-				PRINT_INFO("-- Woman is unengaged.");
+				PRINT_INFO("-- Woman is not engaged.");
 				engage(currentMan_, currentWoman_);
 			}
 			
@@ -102,7 +104,7 @@ namespace ufa
 	
 	int GaleShapleyAlgorithm::nextPreferredWoman(const int p_man)
 	{
-		int preferredWoman = men_[currentMan_].currentWoman;
+		int preferredWoman = men_[currentMan_].nextWoman;
 		return men_[currentMan_].preferredWomen[preferredWoman].womanID;
 	}
 	
