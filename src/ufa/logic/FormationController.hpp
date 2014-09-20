@@ -4,7 +4,6 @@
 #include "ufa/entities/Formation.hpp"
 #include "ufa/logic/Controller.hpp"
 #include "ufa/logic/FormationShape.hpp"
-#include "ufa/logic/FormationPlacement.hpp"
 
 namespace ufa
 {
@@ -19,12 +18,10 @@ namespace ufa
 	protected:
 		Formation formation_;
 		FormationShape *formationShape_;
-		FormationPlacement *formationPlacement_;
 
 	public:
 		FormationController(const std::vector<std::shared_ptr<Unit>> &p_units,
-		                    FormationShape *p_formationShape,
-							FormationPlacement *p_formationPlacement);
+		                    FormationShape *p_formationShape);
 		virtual ~FormationController();
 
 		Formation& getFormation();

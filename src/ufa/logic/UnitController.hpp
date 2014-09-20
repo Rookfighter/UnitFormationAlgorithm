@@ -20,7 +20,6 @@ namespace ufa
 		~UnitController();
 		
 		void step(const unsigned int p_usec);
-		void setTarget(const Vec2 &p_target);
 		
 		std::shared_ptr<Unit>& getUnit();
 	};

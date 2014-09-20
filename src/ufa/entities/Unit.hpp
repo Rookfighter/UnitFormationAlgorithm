@@ -35,6 +35,8 @@ namespace ufa
 			 const float p_outerRadius,
 			 const float p_maxVeloxity);
 		virtual ~Unit();
+		
+		void moveToTarget(const Vec2 &p_target);
 
 	};
 }

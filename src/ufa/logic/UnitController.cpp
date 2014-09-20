@@ -47,12 +47,6 @@ namespace ufa
 				   
 		}
 	}
-	
-	void UnitController::setTarget(const Vec2 &p_target)
-	{
-		unit_->targetPosition = p_target;
-		unit_->moving = true;
-	}
 		
 	std::shared_ptr<Unit>& UnitController::getUnit()
 	{

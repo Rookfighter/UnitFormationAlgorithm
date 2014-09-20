@@ -1,16 +1,18 @@
 #include "ufa/logic/BlockFormationShape.hpp"
+#include "ufa/logic/GaleShapleyAlgorithm.hpp"
 #include "ufa/general/Math.hpp"
 
 namespace ufa
 {
 
 	BlockFormationShape::BlockFormationShape()
-	:rowLength_(4)
+	:rowLength_(4), formationPlacement_(new GaleShapleyAlgorithm())
 	{
 	}
 
 	BlockFormationShape::~BlockFormationShape()
 	{
+		delete formationPlacement_;
 	}
 
 	void BlockFormationShape::calcFormationPositions(Formation& p_formation)
@@ -30,6 +32,8 @@ namespace ufa
 				currentFormation_->units[i * rowLength_ + j].position.y = y - j * maxRadius * 2;
 			}
 		}
+		
+		formationPlacement_->placeUnits(p_formation);
 	}
 	
 	float BlockFormationShape::getMaxRadius()

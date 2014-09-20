@@ -2,6 +2,7 @@
 #define UFA_BLOCK_FORMATION_SHAPE_HPP
 
 #include "ufa/logic/FormationShape.hpp"
+#include "ufa/logic/FormationPlacement.hpp"
 
 namespace ufa
 {
@@ -10,6 +11,7 @@ namespace ufa
 	{
 	private:
 		Formation *currentFormation_;
+		FormationPlacement *formationPlacement_;
 		int rows_;
 		int rowLength_;
 		

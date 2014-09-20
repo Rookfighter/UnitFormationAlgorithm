@@ -14,5 +14,11 @@ namespace ufa
 	
 	Unit::~Unit()
 	{ }
+	
+	void Unit::moveToTarget(const Vec2 &p_target)
+	{
+		targetPosition = p_target;
+		moving = true;
+	}
 }
 
