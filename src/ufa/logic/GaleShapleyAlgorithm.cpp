@@ -67,16 +67,16 @@ namespace ufa
 			currentWoman_ = nextPreferredWoman(currentMan_);
 			men_[currentMan_].nextWoman++;
 			
-			PRINT_INFO("Man %d.", currentMan_);
+			//PRINT_INFO("Man %d.", currentMan_);
 			
 			if(womanIsEngaged(currentWoman_)) {
 				int rival = women_[currentWoman_].engagedTo;
-				PRINT_INFO("-- Woman is engaged.");
-				PRINT_INFO("-- Man dist=%.2f; Rival dist = %.2f.", men_[currentMan_].distances[currentWoman_], men_[rival].distances[currentWoman_]);
+				//PRINT_INFO("-- Woman is engaged.");
+				//PRINT_INFO("-- Man dist=%.2f; Rival dist = %.2f.", men_[currentMan_].distances[currentWoman_], men_[rival].distances[currentWoman_]);
 				
 				if(men_[currentMan_].distances[currentWoman_] < men_[rival].distances[currentWoman_]) {
 					// current man is more attractive
-					PRINT_INFO("-- Current is more attractive.");
+					//PRINT_INFO("-- Current is more attractive.");
 					men_[rival].next = men_[currentMan_].next;
 					men_[currentMan_].next = rival;
 					men_[rival].engagedTo = -1;
@@ -84,12 +84,12 @@ namespace ufa
 					engage(currentMan_, currentWoman_);
 				} else {
 					// next try
-					PRINT_INFO("-- Next try");
+					//PRINT_INFO("-- Next try");
 					continue;
 				}
 			} else {
 				// woman is not engaged
-				PRINT_INFO("-- Woman is not engaged.");
+				//PRINT_INFO("-- Woman is not engaged.");
 				engage(currentMan_, currentWoman_);
 			}
 			

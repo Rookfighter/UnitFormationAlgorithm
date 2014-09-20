@@ -2,6 +2,8 @@
 #include "ufa/logic/GaleShapleyAlgorithm.hpp"
 #include "ufa/general/Math.hpp"
 
+#define ROW_LENGTH_RATIO (2.0f)
+
 namespace ufa
 {
 
@@ -19,7 +21,8 @@ namespace ufa
 	{
 		currentFormation_ = &p_formation;
 		
-		rows_ = currentFormation_->units.size() / rowLength_;
+		rowLength_ = sqrt(ROW_LENGTH_RATIO * currentFormation_->units.size());
+		rows_ = rowLength_ / ROW_LENGTH_RATIO;
 		
 		float maxRadius = getMaxRadius();
 		
@@ -28,6 +31,7 @@ namespace ufa
 		
 		for(int i = 0; i < rows_; ++i) {
 			for(int j = 0; j < rowLength_; ++j) {
+				if((i + 1) * (j + 1) < currentFormation_->units.size())
 				currentFormation_->units[i * rowLength_ + j].position.x = x - i * maxRadius * 2;
 				currentFormation_->units[i * rowLength_ + j].position.y = y - j * maxRadius * 2;
 			}
