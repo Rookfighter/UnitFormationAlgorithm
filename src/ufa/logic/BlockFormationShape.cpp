@@ -24,16 +24,18 @@ namespace ufa
 		rowLength_ = sqrt(ROW_LENGTH_RATIO * currentFormation_->units.size());
 		rows_ = rowLength_ / ROW_LENGTH_RATIO;
 		
+		if(rowLength_ * rows_ < currentFormation_->units.size())
+			rows_++;
+		
 		float maxRadius = getMaxRadius();
 		
 		float x = ( ((float) rows_) / 2) * maxRadius;
-		float y = ( ((float) rowLength_) / 2) * maxRadius;
 		
 		for(int i = 0; i < rows_; ++i) {
 			for(int j = 0; j < rowLength_; ++j) {
 				if((i + 1) * (j + 1) < currentFormation_->units.size())
 				currentFormation_->units[i * rowLength_ + j].position.x = x - i * maxRadius * 2;
-				currentFormation_->units[i * rowLength_ + j].position.y = y - j * maxRadius * 2;
+				currentFormation_->units[i * rowLength_ + j].position.y = pow(-1, j) * (j / 2) * maxRadius * 2 + maxRadius;
 			}
 		}
 		
