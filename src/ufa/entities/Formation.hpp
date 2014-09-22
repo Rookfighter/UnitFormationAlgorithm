@@ -31,6 +31,8 @@ namespace ufa
 		
 		Formation();
 		~Formation();
+		
+		bool reachedTarget(const float p_epsilon) const;
 
 	};
 

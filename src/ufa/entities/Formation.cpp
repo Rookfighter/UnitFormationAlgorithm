@@ -1,4 +1,5 @@
 #include "ufa/entities/Formation.hpp"
+#include "ufa/general/Math.hpp"
 
 namespace ufa
 {
@@ -13,5 +14,10 @@ namespace ufa
 	{
 	}
 
-
+	bool Formation::reachedTarget(const float p_epsilon) const
+	{
+		return sameFloat(center.x, targetPosition.x, p_epsilon) &&
+			   sameFloat(center.y, targetPosition.y, p_epsilon);
+	}
+	
 }

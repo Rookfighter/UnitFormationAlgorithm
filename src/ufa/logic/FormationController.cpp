@@ -112,6 +112,14 @@ namespace ufa
 			updateFormationCenter(formation_.commander.unit->position);
 			setUnitTargetPositions();
 			
+			if(formation_.reachedTarget(POSITION_EPS)) {
+				formation_.moving = false;
+				return;
+			}
+			
+			updateFormationCenter(formation_.commander.unit->position);
+			setUnitTargetPositions();
+			
 			calcCommanderVelocity(p_usec);
 			
 			Vec2 commanderFuturePos = formation_.commander.unit->position + formation_.commander.unit->velocity * usecToSec(p_usec);

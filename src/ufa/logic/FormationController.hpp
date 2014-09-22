@@ -16,6 +16,7 @@ namespace ufa
 		void moveFormation(const unsigned int p_usec);
 		
 		void selectCommander();
+		bool reachedTarget();
 		void updateFormationOrientation();
 		void updateFormationCenter(const Vec2 &p_commanderPosition);
 		void setUnitTargetPositions();
