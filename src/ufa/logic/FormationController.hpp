@@ -11,11 +11,15 @@ namespace ufa
 	class FormationController : public Controller
 	{
 	private:
-		void setUnitTargetPositions();
-
 		void formFormation(const unsigned int p_usec);
 		bool hasFormedUp();
 		void moveFormation(const unsigned int p_usec);
+		
+		void selectCommander();
+		void updateFormationOrientation();
+		void updateFormationCenter(const Vec2 &p_commanderPosition);
+		void setUnitTargetPositions();
+		void calcCommanderVelocity(const unsigned int p_usec);
 	protected:
 		Formation formation_;
 		FormationShape *formationShape_;

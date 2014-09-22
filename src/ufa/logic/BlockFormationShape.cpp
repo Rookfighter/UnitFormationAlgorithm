@@ -8,7 +8,7 @@ namespace ufa
 {
 
 	BlockFormationShape::BlockFormationShape()
-	:rowLength_(4), formationPlacement_(new GaleShapleyAlgorithm())
+		:rowLength_(4), formationPlacement_(new GaleShapleyAlgorithm())
 	{
 	}
 
@@ -20,19 +20,19 @@ namespace ufa
 	void BlockFormationShape::calcFormationPositions(Formation& p_formation)
 	{
 		currentFormation_ = &p_formation;
-		
+
 		rows_ = sqrt(((float)currentFormation_->units.size()) / ROW_LENGTH_RATIO);
 		if(rows_ <= 0)
 			rows_ = 1;
 		rowLength_ = ROW_LENGTH_RATIO * rows_;
-		
+
 		while(rowLength_ * rows_ < currentFormation_->units.size())
 			rowLength_++;
-		
+
 		float maxRadius = getMaxRadius();
-		
-		float x = ( ((float) rows_) / 2) * maxRadius;
-		
+
+		float x = (((float) rows_) / 2) * maxRadius;
+
 		for(int i = 0; i < rows_; ++i) {
 			for(int j = 0; j < rowLength_; ++j) {
 				if(i * rowLength_ + j < currentFormation_->units.size()) {
@@ -41,10 +41,10 @@ namespace ufa
 				}
 			}
 		}
-		
-		formationPlacement_->placeUnits(p_formation);
+
+		//formationPlacement_->placeUnits(p_formation);
 	}
-	
+
 	float BlockFormationShape::getMaxRadius()
 	{
 		float result = 0;

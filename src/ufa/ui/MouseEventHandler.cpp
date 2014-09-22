@@ -66,16 +66,22 @@ namespace ufa
 	
 	void MouseEventHandler::selectUnits()
 	{
-		std::list<std::shared_ptr<DrawableUnit>>::iterator it;
 		//release all selected drawables
-		for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it)
-			(*it)->select(false);
+		for(std::shared_ptr<DrawableUnit> unit : selectedUnits_)
+			unit->select(false);
 		
 		// get all drawables that are in the range of the MouseBox
 		selectedUnits_ = gameDrawer_.getUnitDrawer().getUnitsInRect(mouseBox_->topLeft(gameDrawer_.getWindow()), mouseBox_->size(gameDrawer_.getWindow()));
 		
-		for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it)
-			(*it)->select(true);
+		for(std::shared_ptr<DrawableUnit> unit : selectedUnits_)
+			unit->select(true);
+		
+		// create formation
+		std::vector<std::shared_ptr<Unit>> units;
+		units.reserve(selectedUnits_.size());
+		for(std::shared_ptr<DrawableUnit> unit : selectedUnits_)
+			units.push_back(unit->getUnitController()->getUnit());
+		formationController_ = gameFactory_.createBlockFormation(units);
 	}
 	
 	void MouseEventHandler::processRightMouseButtonPressed(const sf::Event &p_event)
@@ -91,15 +97,7 @@ namespace ufa
 			rightPressed_ = false;
 			
 			sf::Vector2f targetPos = gameDrawer_.getWindow().mapPixelToCoords(sf::Vector2i(p_event.mouseButton.x, p_event.mouseButton.y));
-			std::vector<std::shared_ptr<Unit>> units;
-			units.reserve(selectedUnits_.size());
-			
-			std::list<std::shared_ptr<DrawableUnit>>::iterator it;
-			for(it = selectedUnits_.begin(); it != selectedUnits_.end(); ++it) {
-				units.push_back((*it)->getUnitController()->getUnit());
-			}
-			
-			gameFactory_.createBlockFormation(units)->formUpAt(Vec2(targetPos.x, targetPos.y));
+			formationController_->moveTo(Vec2(targetPos.x, targetPos.y));
 		}
 	}
 	

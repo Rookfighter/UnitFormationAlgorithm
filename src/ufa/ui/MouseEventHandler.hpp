@@ -19,6 +19,7 @@ namespace ufa
 		GameDrawer& gameDrawer_;
 		GameFactory& gameFactory_;
 		std::shared_ptr<MouseBox> mouseBox_;
+		std::shared_ptr<FormationController> formationController_;
 		std::list<std::shared_ptr<DrawableUnit>> selectedUnits_;
 		
 		void processLeftMouseButtonPressed(const sf::Event &p_event);

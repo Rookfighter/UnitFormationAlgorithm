@@ -3,6 +3,7 @@
 #include "ufa/general/Logging.hpp"
 
 #define POSITION_EPS 0.001f
+#define FORMATION_POSITION_EPS 0.01f
 
 namespace ufa
 {
@@ -16,7 +17,26 @@ namespace ufa
 			formation_.units.push_back(FormationUnit());
 			formation_.units.back().unit = p_units[i];
 		}
-			
+		
+		formationShape_->calcFormationPositions(formation_);
+		selectCommander();
+	}
+	
+	void FormationController::selectCommander()
+	{
+		formation_.commander.position.set(0,100);
+		for(int i = 0; i < formation_.units.size(); ++i) {
+			if(formation_.units[i].position.x > formation_.commander.position.x) {
+				// unit is nearer at front position
+				formation_.commander = formation_.units[i];
+			} else if(sameFloat(formation_.units[i].position.x, formation_.commander.position.x, FORMATION_POSITION_EPS)) {
+				// unit is in same row
+				if(fabs(formation_.units[i].position.y) < fabs(formation_.commander.position.x)) {
+					// unit is nearer to mid
+					formation_.commander = formation_.units[i];
+				}
+			}
+		}
 	}
 
 	FormationController::~FormationController()
@@ -30,14 +50,18 @@ namespace ufa
 	
 	void FormationController::moveTo(const Vec2& p_targetPosition)
 	{
-		formation_.targetPosition = p_targetPosition;
-		formation_.moving = true;
+		if(formation_.state != FORMED)
+			formUpAt(p_targetPosition);
+		else {
+			formation_.targetPosition = p_targetPosition;
+			formation_.moving = true;
+			updateFormationOrientation();
+		}
 	}
 	
 	void FormationController::formUpAt(const Vec2 &p_position)
 	{
 		formation_.center = p_position;
-		formationShape_->calcFormationPositions(formation_);
 		setUnitTargetPositions();
 		formation_.state = FORMING;
 	}
@@ -84,7 +108,57 @@ namespace ufa
 	
 	void FormationController::moveFormation(const unsigned int p_usec)
 	{
+		if(formation_.moving) {
+			updateFormationCenter(formation_.commander.unit->position);
+			setUnitTargetPositions();
+			
+			calcCommanderVelocity(p_usec);
+			
+			Vec2 commanderFuturePos = formation_.commander.unit->position + formation_.commander.unit->velocity * usecToSec(p_usec);
+			updateFormationCenter(commanderFuturePos);
+			setUnitTargetPositions();
+		}
+	}
+	
+	void FormationController::updateFormationOrientation()
+	{
+		Vec2 diff = formation_.targetPosition - formation_.center;
+		formation_.orientation = atan2(diff.y, diff.x);
+	}
+	
+	void FormationController::updateFormationCenter(const Vec2 &p_commanderPosition)
+	{
+		formation_.center = p_commanderPosition - rotateVector(formation_.commander.position, formation_.orientation);
+	}
+	
+	void FormationController::calcCommanderVelocity(const unsigned int p_usec)
+	{
+		float maxDistanceToTarget = 0;
+		float minMaxVelocity = -1;
+		int unit = -1;
+		for(int i = 0; i < formation_.units.size(); ++i) {
+			// get max distance to unit's target
+			float distance = (formation_.units[i].unit->position - formation_.units[i].unit->targetPosition).lengthSQ();
+			if(distance > maxDistanceToTarget) {
+				maxDistanceToTarget = distance;
+				unit = i;
+			}
+			
+			// get min maxVelocity of all units
+			if(minMaxVelocity > formation_.units[i].unit->maxVelocity || minMaxVelocity < 0)
+				minMaxVelocity = formation_.units[i].unit->maxVelocity;
+		}
 		
+		float toMove = usecToSec(p_usec) * formation_.units[unit].unit->maxVelocity;
+		float diffMovement = toMove - sqrt(maxDistanceToTarget);
+		if(diffMovement < 0)
+			diffMovement = 0;
+			
+		diffMovement = diffMovement / usecToSec(p_usec);
+		Vec2 formationDiff = formation_.targetPosition - formation_.center;
+		float targetVelocity = MIN(MIN(diffMovement, minMaxVelocity), formationDiff.length());
+		formation_.commander.unit->velocity.x = cos(formation_.orientation) * MIN(diffMovement, minMaxVelocity);
+		formation_.commander.unit->velocity.y = sin(formation_.orientation) * MIN(diffMovement, minMaxVelocity);
 	}
 	
 }

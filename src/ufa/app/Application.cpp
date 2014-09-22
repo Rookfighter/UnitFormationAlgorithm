@@ -3,7 +3,7 @@
 #include "ufa/general/Logging.hpp"
 #include "ufa/general/Math.hpp"
 
-#define UNIT_COUNT 64
+#define UNIT_COUNT 12
 #define APP_NAME "Unit Formation"
 
 namespace ufa

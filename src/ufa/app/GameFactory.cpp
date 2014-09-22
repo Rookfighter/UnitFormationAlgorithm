@@ -12,7 +12,7 @@ namespace ufa
 {
 
 	GameFactory::GameFactory()
-		:world_(), simController_(), window_(sf::VideoMode(DEFAULT_WIDTH, DEFAULT_HEIGHT), DEFAULT_NAME),
+		:world_(), simController_(world_), window_(sf::VideoMode(DEFAULT_WIDTH, DEFAULT_HEIGHT), DEFAULT_NAME),
 		 gameDrawer_(window_), eventManager_(window_)
 	{
 		

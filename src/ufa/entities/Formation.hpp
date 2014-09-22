@@ -24,6 +24,7 @@ namespace ufa
 		bool moving;
 		float orientation;
 		
+		FormationUnit commander;
 		std::vector<FormationUnit> units;
 		
 		FormationState state;
