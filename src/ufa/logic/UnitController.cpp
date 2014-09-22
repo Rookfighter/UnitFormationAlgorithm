@@ -40,8 +40,7 @@ namespace ufa
 			Vec2 distanceToMove = unit_->velocity * usecToSec(p_usec);
 			unit_->position += distanceToMove;
 			
-			if(sameFloat(unit_->position.x, unit_->targetPosition.x, POSITION_EPS) &&
-			   sameFloat(unit_->position.y, unit_->targetPosition.y, POSITION_EPS)) {
+			if(unit_->reachedTarget(POSITION_EPS)) {
 				   unit_->moving = false;
 			   }
 				   

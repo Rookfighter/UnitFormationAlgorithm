@@ -21,11 +21,13 @@ namespace ufa
 	{
 		currentFormation_ = &p_formation;
 		
-		rowLength_ = sqrt(ROW_LENGTH_RATIO * currentFormation_->units.size());
-		rows_ = rowLength_ / ROW_LENGTH_RATIO;
+		rows_ = sqrt(((float)currentFormation_->units.size()) / ROW_LENGTH_RATIO);
+		if(rows_ <= 0)
+			rows_ = 1;
+		rowLength_ = ROW_LENGTH_RATIO * rows_;
 		
-		if(rowLength_ * rows_ < currentFormation_->units.size())
-			rows_++;
+		while(rowLength_ * rows_ < currentFormation_->units.size())
+			rowLength_++;
 		
 		float maxRadius = getMaxRadius();
 		
@@ -33,9 +35,10 @@ namespace ufa
 		
 		for(int i = 0; i < rows_; ++i) {
 			for(int j = 0; j < rowLength_; ++j) {
-				if((i + 1) * (j + 1) < currentFormation_->units.size())
-				currentFormation_->units[i * rowLength_ + j].position.x = x - i * maxRadius * 2;
-				currentFormation_->units[i * rowLength_ + j].position.y = pow(-1, j) * (j / 2) * maxRadius * 2 + maxRadius;
+				if(i * rowLength_ + j < currentFormation_->units.size()) {
+					currentFormation_->units[i * rowLength_ + j].position.x = x - i * maxRadius * 2;
+					currentFormation_->units[i * rowLength_ + j].position.y = pow(-1, j) * ((j / 2) * maxRadius * 2 + maxRadius);
+				}
 			}
 		}
 		

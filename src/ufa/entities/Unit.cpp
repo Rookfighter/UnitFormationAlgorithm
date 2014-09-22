@@ -1,4 +1,5 @@
-#include "Unit.hpp"
+#include "ufa/entities/Unit.hpp"
+#include "ufa/general/Math.hpp"
 
 namespace ufa
 {
@@ -19,6 +20,12 @@ namespace ufa
 	{
 		targetPosition = p_target;
 		moving = true;
+	}
+	
+	bool Unit::reachedTarget(const float p_epsilon) const
+	{
+		return sameFloat(position.x, targetPosition.x, p_epsilon) &&
+			   sameFloat(position.y, targetPosition.y, p_epsilon);
 	}
 }
 

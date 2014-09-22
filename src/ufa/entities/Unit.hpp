@@ -37,6 +37,7 @@ namespace ufa
 		virtual ~Unit();
 		
 		void moveToTarget(const Vec2 &p_target);
+		bool reachedTarget(const float p_epsilon) const;
 
 	};
 }

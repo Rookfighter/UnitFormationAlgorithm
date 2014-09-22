@@ -14,6 +14,7 @@ namespace ufa
 		void setUnitTargetPositions();
 
 		void formFormation(const unsigned int p_usec);
+		bool hasFormedUp();
 		void moveFormation(const unsigned int p_usec);
 	protected:
 		Formation formation_;

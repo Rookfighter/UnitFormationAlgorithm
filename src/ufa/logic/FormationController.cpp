@@ -1,5 +1,8 @@
 #include "ufa/logic/FormationController.hpp"
 #include "ufa/general/Math.hpp"
+#include "ufa/general/Logging.hpp"
+
+#define POSITION_EPS 0.001f
 
 namespace ufa
 {
@@ -63,7 +66,20 @@ namespace ufa
 	
 	void FormationController::formFormation(const unsigned int p_usec)
 	{
+		if(hasFormedUp()) {
+			formation_.state = FORMED;
+			PRINT_INFO("Formation formed.");
+		}
+	}
+	
+	bool FormationController::hasFormedUp()
+	{
+		for(int i = 0; i < formation_.units.size(); ++i) {
+			if(!formation_.units[i].unit->reachedTarget(POSITION_EPS))
+				return false;
+		}
 		
+		return true;
 	}
 	
 	void FormationController::moveFormation(const unsigned int p_usec)
