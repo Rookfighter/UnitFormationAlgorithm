@@ -7,7 +7,7 @@
 #include "ufa/logic/BlockFormationController.hpp"
 #include "ufa/ui/DrawableUnit.hpp"
 #include "ufa/ui/GameDrawer.hpp"
-#include "ufa/ui/Eventmanager.hpp"
+#include "ufa/ui/EventManager.hpp"
 #include "ufa/ui/MouseEventHandler.hpp"
 #include "ufa/ui/WindowEventHandler.hpp"
 
