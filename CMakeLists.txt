@@ -22,10 +22,30 @@ file(GLOB UFA_SRC
 add_executable(${PROJECT_NAME} ${UFA_SRC})
 target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
 
-#foreach(SFML_DYN_LIB ${SFML_DYNAMIC_LIBS})
-#	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-#			${SFML_DYN_LIB}
-#			$<TARGET_FILE_DIR:${PROJECT_NAME}>)
-#endforeach(SFML_DYN_LIB ${SFML_DYNAMIC_LIBS})
+if( ${WIN32} )
+	set(SFML_TO_COPY
+		"${SFML_ROOT}/bin/libsndfile-1.dll"
+		"${SFML_ROOT}/bin/openal32.dll"
+		"${SFML_ROOT}/bin/sfml-audio-2.dll"
+		"${SFML_ROOT}/bin/sfml-system-2.dll"
+		"${SFML_ROOT}/bin/sfml-network-2.dll"
+		"${SFML_ROOT}/bin/sfml-graphics-2.dll"
+		"${SFML_ROOT}/bin/sfml-window-2.dll"
+	)
+else( ${WIN32} )
+	set(SFML_TO_COPY
+		"${SFML_ROOT}/bin/sfml-audio.so.2"
+		"${SFML_ROOT}/bin/sfml-system.so.2"
+		"${SFML_ROOT}/bin/sfml-network.so.2"
+		"${SFML_ROOT}/bin/sfml-graphics.so.2"
+		"${SFML_ROOT}/bin/sfml-window.so.2"
+	)
+endif( ${WIN32} )
+
+foreach(TO_COPY ${SFML_TO_COPY})
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${TO_COPY}
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>)
+endforeach(TO_COPY ${SFML_TO_COPY})
 

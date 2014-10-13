@@ -16,13 +16,13 @@ namespace ufa
 		view.setCenter(0, 0);
 		gameFactory_.getRenderWindow().setView(view);
 		gameFactory_.getRenderWindow().setTitle(APP_NAME);
-		
+
 		gameFactory_.createMouseEventHandler();
 		gameFactory_.createWindowEventHandler();
 
 		generateUnits();
 	}
-	
+
 	void Application::generateUnits()
 	{
 		RandomUnitPositioner positioner;
@@ -32,7 +32,7 @@ namespace ufa
 				result = gameFactory_.createMeleeUnit();
 			else
 				result = gameFactory_.createRangedUnit();
-			
+
 			positioner.inArea(result.unit, Vec2(0,0), 10);
 		}
 	}
