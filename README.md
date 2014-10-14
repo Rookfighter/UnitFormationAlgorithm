@@ -16,3 +16,5 @@ to execute cmake to build the binary.
   * The dynamic libraries have to be placed in one of the directories ```lib/SFML-2.1/bin``` or ```lib/SFML-2.1/lib```
   * The include files have to be place in the directory ```lib/SFML-2.1/include```
   * on Linux libjpeg62 has to be installed Ubuntu: ```sudo apt-get install libjpeg62-dev```
+  * on Linux GLEW hast to be installed Ubuntu: ```sudo apt-get install libglew-dev```
+    * if linker cannot find GLEW create symlink from ```/usr/lib/x86_64-linux-gnu/libGLEW.so``` to ```/usr/lib/libGLEW.so```

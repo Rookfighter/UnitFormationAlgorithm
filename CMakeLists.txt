@@ -34,11 +34,11 @@ if( ${WIN32} )
 	)
 else( ${WIN32} )
 	set(SFML_TO_COPY
-		"${SFML_ROOT}/bin/sfml-audio.so.2"
-		"${SFML_ROOT}/bin/sfml-system.so.2"
-		"${SFML_ROOT}/bin/sfml-network.so.2"
-		"${SFML_ROOT}/bin/sfml-graphics.so.2"
-		"${SFML_ROOT}/bin/sfml-window.so.2"
+		"${SFML_ROOT}/lib/libsfml-audio.so.2"
+		"${SFML_ROOT}/lib/libsfml-system.so.2"
+		"${SFML_ROOT}/lib/libsfml-network.so.2"
+		"${SFML_ROOT}/lib/libsfml-graphics.so.2"
+		"${SFML_ROOT}/lib/libsfml-window.so.2"
 	)
 endif( ${WIN32} )
 
