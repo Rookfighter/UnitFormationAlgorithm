@@ -13,6 +13,7 @@ find_package(SFML 2 COMPONENTS system window graphics audio network REQUIRED)
 include_directories("src" ${SFML_INCLUDE_DIR})
 file(GLOB UFA_SRC
 	"src/ufa/main.cpp"
+	"src/ufa/collision/*.cpp"
 	"src/ufa/entities/*.cpp"
 	"src/ufa/ui/*.cpp"
 	"src/ufa/logic/*.cpp"
