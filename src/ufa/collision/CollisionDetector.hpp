@@ -6,39 +6,32 @@
 
 namespace collision
 {
+    struct Collision {
+        bool willCollide;
+        bool collide;
+        Vec2f minTranslationVector;
+    };
+
     class CollisionDetector
     {
     private:
         CollisionDetector();
         ~CollisionDetector();
 
+        struct Interval {
+            float min;
+            float max;
+        };
+
+        static bool checkCircleCircle(const Vec2f &p_midA, const float p_radiusA, const Vec2f &p_midB, const float p_radiusB);
+        static Interval getProjectionIntervalRect(const Vec2f &p_axis, const std::vector<Vec2f> &p_rectCorners);
+        static Interval getProjectionIntervalCircle(const Vec2f &p_axis, const Vec2f &p_mid, const float p_radius);
+        static float calcIntervalDistance(const Interval &p_intervalA, const Interval &p_ibtervalB);
     public:
-        static bool check(CollisionObject *a, CollisionObject *b);
-        static bool check(CollisionObject *a, CollisionTile *b);
+        static Collision check(CollisionObject *a, CollisionObject *b, const float p_deltaSec = 1.0f);
+        static Collision check(CollisionObject *a, CollisionTile *b, const float p_deltaSec = 1.0f);
 
-        static bool checkCircleCircle(const Vec2f &p_circleMidA,
-                const float p_radiusA, const Vec2f &p_circleMidB,
-                const float p_radiusB);
-        static bool checkCircleRect(const Vec2f& p_circleMid,
-                const float p_radius, const Vec2f& p_rectTopLeft,
-                const Vec2f& p_rectSize);
 
-        static bool isInRect(const Vec2f& p_position,
-                const Vec2f& p_rectTopLeft, const Vec2f& p_rectSize);
-        static bool circleIntesectsRect(const Vec2f& p_circleMid,
-                const float p_radius, const Vec2f& p_rectTopLeft,
-                const Vec2f& p_rectSize);
-
-        static bool intersectTop(const Vec2f& p_circleMid, const float p_radius,
-                const Vec2f& p_rectTopLeft, const Vec2f& p_rectSize);
-        static bool intersectBot(const Vec2f& p_circleMid, const float p_radius,
-                const Vec2f& p_rectTopLeft, const Vec2f& p_rectSize);
-        static bool intersectLeft(const Vec2f& p_circleMid,
-                const float p_radius, const Vec2f& p_rectTopLeft,
-                const Vec2f& p_rectSize);
-        static bool intersectRight(const Vec2f& p_circleMid,
-                const float p_radius, const Vec2f& p_rectTopLeft,
-                const Vec2f& p_rectSize);
     };
 
 }

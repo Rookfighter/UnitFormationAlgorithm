@@ -1,4 +1,6 @@
 #include <cmath>
+#include <cassert>
+#include <cfloat>
 #include "ufa/collision/CollisionDetector.hpp"
 
 namespace collision
@@ -12,123 +14,88 @@ namespace collision
     {
     }
 
-    bool CollisionDetector::check(CollisionObject *a, CollisionObject *b)
+    Collision CollisionDetector::check(CollisionObject *a, CollisionObject *b,
+            const float p_deltaSec)
     {
-        return checkCircleCircle(a->getPosition(), a->getRadius(), b->getPosition(), b->getRadius());
+        Collision result;
+
+        Vec2f axis = b->getPosition() - a->getPosition();
+        axis.normalize();
+        Interval intervalA = getProjectionIntervalCircle(axis, a->getPosition(),
+                a->getRadius());
+        Interval intervalB = getProjectionIntervalCircle(axis, b->getPosition(),
+                b->getRadius());
+        result.collide = calcIntervalDistance(intervalA, intervalB) <= 0;
+
+        float velProjection = axis * a->getVelocity();
+
+        if(velProjection < 0)
+            intervalA.min += velProjection;
+        else
+            intervalA.max += velProjection;
+
+        float intervalDistance = calcIntervalDistance(intervalA, intervalB);
+        result.willCollide = intervalDistance <= 0;
+
+        Vec2f midDistance = b->getPosition() - a->getPosition();
+        if(midDistance * axis < 0)
+            axis.invert();
+
+        result.minTranslationVector = axis * intervalDistance;
+
+        return result;
     }
 
-    bool CollisionDetector::check(CollisionObject *a, CollisionTile *b)
+    bool CollisionDetector::checkCircleCircle(const Vec2f &p_midA,
+            const float p_radiusA, const Vec2f &p_midB, const float p_radiusB)
     {
-        if(b->isFineGrained())
-            return checkCircleRect(a->getPosition(), a->getRadius(),
-                    b->getTopLeft(), b->getTileSize());
-        else {
-            return false;
-        }
-    }
-
-    bool CollisionDetector::checkCircleCircle(const Vec2f &p_circleMidA,
-            const float p_radiusA, const Vec2f &p_circleMidB,
-            const float p_radiusB)
-    {
-        // circle-circle collision
-        return (p_circleMidA - p_circleMidB).lengthSQ()
+        return (p_midA - p_midB).lengthSQ()
                 <= (p_radiusA + p_radiusB) * (p_radiusA + p_radiusB);
     }
 
-    bool CollisionDetector::checkCircleRect(const Vec2f& p_circleMid,
-            const float p_radius, const Vec2f& p_rectTopLeft,
-            const Vec2f& p_rectSize)
+    Collision CollisionDetector::check(CollisionObject *a, CollisionTile *b,
+            const float p_deltaSec)
     {
-        bool collided = false;
-        // check if mid of circle is in rect
-        collided = isInRect(p_circleMid, p_rectTopLeft, p_rectSize);
-        if(collided)
-            return true;
-
-        // check if distance to sides of rect is shorter than radius
-        collided = circleIntesectsRect(p_circleMid, p_radius, p_rectTopLeft,
-                p_rectSize);
-        if(collided)
-            return collided;
-
-        // check if corners are in circle
-        Vec2f topRight, botLeft, botRight;
-
-        topRight.set(p_rectTopLeft.x + p_rectSize.x, p_rectTopLeft.y);
-        botLeft.set(p_rectTopLeft.x, p_rectTopLeft.y - p_rectSize.y);
-        botRight.set(p_rectTopLeft.x + p_rectSize.x,
-                p_rectTopLeft.y - p_rectSize.y);
-        collided = (p_rectTopLeft - p_circleMid).lengthSQ()
-                <= p_radius * p_radius
-                || (topRight - p_circleMid).lengthSQ() <= p_radius * p_radius
-                || (botLeft - p_circleMid).lengthSQ() <= p_radius * p_radius
-                || (botRight - p_circleMid).lengthSQ() <= p_radius * p_radius;
-
-        return collided;
     }
 
-    bool CollisionDetector::isInRect(const Vec2f &p_position,
-            const Vec2f &p_rectTopLeft, const Vec2f &p_rectSize)
+    CollisionDetector::Interval CollisionDetector::getProjectionIntervalRect(
+            const Vec2f& p_axis, const std::vector<Vec2f> &p_rectCorners)
     {
-        return p_position.x <= p_rectTopLeft.x + p_rectSize.x
-                && p_position.x >= p_rectTopLeft.x
-                && p_position.y <= p_rectTopLeft.y
-                && p_position.y >= p_rectTopLeft.y - p_rectSize.y;
+        assert(p_rectCorners.size() > 0);
+
+        float scalarProduct = p_rectCorners[0] * p_axis;
+        Interval result;
+        result.min = scalarProduct;
+        result.max = scalarProduct;
+
+        for(unsigned int i = 0; i < p_rectCorners.size(); ++i) {
+            scalarProduct = p_rectCorners[i] * p_axis;
+            if(scalarProduct < result.min)
+                result.min = scalarProduct;
+            else if(scalarProduct > result.max)
+                result.max = scalarProduct;
+        }
+
+        return result;
     }
 
-    bool CollisionDetector::circleIntesectsRect(const Vec2f &p_circleMid,
-            const float p_radius, const Vec2f &p_rectTopLeft,
-            const Vec2f &p_rectSize)
+    CollisionDetector::Interval CollisionDetector::getProjectionIntervalCircle(
+            const Vec2f& p_axis, const Vec2f& p_mid, const float p_radius)
     {
-        return intersectTop(p_circleMid, p_radius, p_rectTopLeft, p_rectSize)
-                || intersectBot(p_circleMid, p_radius, p_rectTopLeft,
-                        p_rectSize)
-                || intersectLeft(p_circleMid, p_radius, p_rectTopLeft,
-                        p_rectSize)
-                || intersectRight(p_circleMid, p_radius, p_rectTopLeft,
-                        p_rectSize);
+        float scalarProduct = p_axis * p_mid;
+        Interval result;
+        result.min = scalarProduct - p_radius;
+        result.max = scalarProduct + p_radius;
+        return result;
     }
 
-    bool CollisionDetector::intersectTop(const Vec2f& p_circleMid,
-            const float p_radius, const Vec2f& p_rectTopLeft,
-            const Vec2f& p_rectSize)
+    float CollisionDetector::calcIntervalDistance(const Interval& p_intervalA,
+            const Interval& p_intervalB)
     {
-        return ((fabs(p_rectTopLeft.y - p_circleMid.y) <= p_radius
-                && (fabs(p_rectTopLeft.x - p_circleMid.x) <= p_radius
-                        || fabs(p_rectTopLeft.x + p_rectSize.x - p_circleMid.x)
-                                <= p_radius)));
+        if(p_intervalA.min < p_intervalB.min)
+            return p_intervalB.min - p_intervalA.max;
+        else
+            return p_intervalA.min - p_intervalB.max;
     }
 
-    bool CollisionDetector::intersectBot(const Vec2f& p_circleMid,
-            const float p_radius, const Vec2f& p_rectTopLeft,
-            const Vec2f& p_rectSize)
-    {
-        return ((fabs(p_rectTopLeft.y - p_rectSize.y - p_circleMid.y)
-                <= p_radius
-                && (fabs(p_rectTopLeft.x - p_circleMid.x) <= p_radius
-                        || fabs(p_rectTopLeft.x + p_rectSize.x - p_circleMid.x)
-                                <= p_radius)));
-    }
-
-    bool CollisionDetector::intersectLeft(const Vec2f& p_circleMid,
-            const float p_radius, const Vec2f& p_rectTopLeft,
-            const Vec2f& p_rectSize)
-    {
-        return ((fabs(p_rectTopLeft.x - p_circleMid.x) <= p_radius
-                && (fabs(p_rectTopLeft.y - p_circleMid.y) <= p_radius
-                        || fabs(p_rectTopLeft.y - p_rectSize.y - p_circleMid.y)
-                                <= p_radius)));
-    }
-
-    bool CollisionDetector::intersectRight(const Vec2f& p_circleMid,
-            const float p_radius, const Vec2f& p_rectTopLeft,
-            const Vec2f& p_rectSize)
-    {
-        return ((fabs(p_rectTopLeft.x + p_rectSize.x - p_circleMid.x)
-                <= p_radius
-                && (fabs(p_rectTopLeft.y - p_circleMid.y) <= p_radius
-                        || fabs(p_rectTopLeft.y - p_rectSize.y - p_circleMid.y)
-                                <= p_radius)));
-    }
 }

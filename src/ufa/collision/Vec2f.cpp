@@ -20,6 +20,19 @@ namespace collision
 		return sqrt(lengthSQ());
 	}
 	
+	void Vec2f::normalize()
+	{
+	    float len = length();
+	    x /= len;
+	    y /= len;
+	}
+
+	void Vec2f::invert()
+	{
+	    x = -x;
+	    y = -y;
+	}
+
 	Vec2f Vec2f::perpendicular() const
 	{
 		return Vec2f(-y, x);
@@ -48,7 +61,7 @@ namespace collision
 		
 		return *this;
 	}
-	
+
 	Vec2f& Vec2f::operator/=(const float p_divisor)
 	{
 		x /= p_divisor;
@@ -94,6 +107,11 @@ namespace collision
 		return p_vec * p_factor;
 	}
 	
+	float operator*(Vec2f const& p_vec1, Vec2f const& p_vec2)
+	{
+	    return p_vec1.x * p_vec2.x + p_vec1.y * p_vec2.y;
+	}
+
 	const Vec2f operator/(Vec2f const& p_vec, const float p_divisor)
 	{
 		Vec2f result(p_vec);

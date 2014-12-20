@@ -20,6 +20,8 @@ namespace collision
 		void set(const float p_x, const float p_y);
 		float lengthSQ() const;
 		float length() const;
+		void normalize();
+		void invert();
 		Vec2f perpendicular() const;
 		
 		Vec2f& operator+=(Vec2f const& p_vec);
@@ -30,13 +32,14 @@ namespace collision
 		std::string str() const;
 	};
 	
-	const Vec2f operator+(Vec2f const& p_vec1, Vec2f const& p_Vec2f);
-	const Vec2f operator-(Vec2f const& p_vec1, Vec2f const& p_Vec2f);
+	const Vec2f operator+(Vec2f const& p_vec1, Vec2f const& p_vec2);
+	const Vec2f operator-(Vec2f const& p_vec1, Vec2f const& p_vec2);
 	const Vec2f operator*(Vec2f const& p_vec, const float p_factor);
 	const Vec2f operator*(const float p_factor, Vec2f const& p_vec);
+	float operator*(Vec2f const& p_vec1, Vec2f const& p_vec2);
 	const Vec2f operator/(Vec2f const& p_vec, const float p_divisor);
-	bool operator==(Vec2f const& p_vec1, Vec2f const& p_Vec2f);
-	bool operator!=(Vec2f const& p_vec1, Vec2f const& p_Vec2f);
+	bool operator==(Vec2f const& p_vec1, Vec2f const& p_vec2);
+	bool operator!=(Vec2f const& p_vec1, Vec2f const& p_vec2);
 }
 
 #endif

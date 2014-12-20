@@ -40,6 +40,7 @@ namespace collision
 		bool getFineGrainedAreaTile(const int x, const int y) const;
 		unsigned int getGranularity() const;
 		void* getUserData();
+		std::vector<Vec2f> getCorners() const;
 	};
 
 }
