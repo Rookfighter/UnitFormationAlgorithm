@@ -3,7 +3,7 @@ project(UnitFormationAlgorithm)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
-get_filename_component(SFML_ROOT "./lib/SFML-2.1" ABSOLUTE)
+get_filename_component(SFML_ROOT "./lib/SFML-2.2" ABSOLUTE)
 get_filename_component(CDL_MODULES_PATH "./cmake-modules" ABSOLUTE) 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CDL_MODULES_PATH})
@@ -34,12 +34,12 @@ if( ${WIN32} )
 		"${SFML_ROOT}/bin/sfml-window-2.dll"
 	)
 else( ${WIN32} )
-	set(SFML_TO_COPY
-		"${SFML_ROOT}/lib/libsfml-audio.so.2"
-		"${SFML_ROOT}/lib/libsfml-system.so.2"
-		"${SFML_ROOT}/lib/libsfml-network.so.2"
-		"${SFML_ROOT}/lib/libsfml-graphics.so.2"
-		"${SFML_ROOT}/lib/libsfml-window.so.2"
+	file(GLOB SFML_TO_COPY
+		"${SFML_ROOT}/lib/libsfml-audio.so.*"
+		"${SFML_ROOT}/lib/libsfml-system.so.*"
+		"${SFML_ROOT}/lib/libsfml-network.so.*"
+		"${SFML_ROOT}/lib/libsfml-graphics.so.*"
+		"${SFML_ROOT}/lib/libsfml-window.so.*"
 	)
 endif( ${WIN32} )
 

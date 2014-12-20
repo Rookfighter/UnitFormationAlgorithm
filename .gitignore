@@ -1,4 +1,9 @@
 *~
 *.project
+*.cproject
+*.metadata
+*.settings
 build/
+Debug/
+Release/
 lib/

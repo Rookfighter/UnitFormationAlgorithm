@@ -28,7 +28,6 @@ namespace collision
 			front_ = result;
 			tail_ = result;
 		} else {
-			tail_->next_ = result;
 			tail_ = result;
 		}
 		
@@ -38,24 +37,6 @@ namespace collision
 	
 	bool World::destroyCollisionObject(CollisionObject* p_object)
 	{
-		for(CollisionObject* obj = front_; obj != NULL; obj = obj->next_) {
-			if(obj == p_object) {
-				// check if object is front of list
-				if(obj->prev_ == NULL)
-					front_ = obj->next_;
-				else
-					obj->prev_->next_ = obj->next_;
-				
-				// check if object is tail of list
-				if(obj->next_ == NULL)
-					tail_ = obj->prev_;
-				else
-					obj->next_->prev_ = obj->prev_;
-					
-				delete obj;
-				return true;
-			}
-		}
 		return false;
 	}
 	
@@ -65,7 +46,7 @@ namespace collision
 			return NULL;
 		
 		tileGrid_[p_position.x][p_position.y] = new CollisionTile(p_position);
-		tileGrid_[p_position.x][p_position.y]->setGridTileSize(tileSize_);
+		tileGrid_[p_position.x][p_position.y]->setTileSize(tileSize_);
 		return tileGrid_[p_position.x][p_position.y];
 	}
 	

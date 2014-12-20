@@ -1,10 +1,11 @@
+#include <cassert>
 #include "ufa/collision/CollisionObject.hpp"
 
 namespace collision
 {
 
 	CollisionObject::CollisionObject()
-	: gridTileSize_(1,1), innerRadius_(1), outerRadius_(1), userData_(NULL), next_(NULL), prev_(NULL)
+	: tileSize_(1,1), radius_(1), userData_(NULL)
 	{
 	}
 
@@ -14,6 +15,7 @@ namespace collision
 	
 	void CollisionObject::setPosition(const Vec2f& p_position)
 	{
+	    assert(p_position.x >= 0 && p_position.y >= 0);
 		position_ = p_position;
 	}
 	
@@ -22,14 +24,10 @@ namespace collision
 		velocity_ = p_velocity;
 	}
 
-	void CollisionObject::setInnerRadius(const float p_radius)
+	void CollisionObject::setRadius(const float p_radius)
 	{
-		innerRadius_ = p_radius;
-	}
-
-	void CollisionObject::setOuterRadius(const float p_radius)
-	{
-		outerRadius_ = p_radius;
+	    assert(p_radius > 0);
+		radius_ = p_radius;
 	}
 
 	void CollisionObject::setUserData(void* p_userData)
@@ -39,7 +37,8 @@ namespace collision
 	
 	void CollisionObject::setGridTileSize(const Vec2f& p_size)
 	{
-		gridTileSize_ = p_size;
+	    assert(p_size.x > 0 && p_size.y > 0);
+		tileSize_ = p_size;
 	}
 	
 	const Vec2f& CollisionObject::getPosition() const
@@ -52,14 +51,9 @@ namespace collision
 		return velocity_;
 	}
 	
-	float CollisionObject::getInnerRadius() const
+	float CollisionObject::getRadius() const
 	{
-		return innerRadius_;
-	}
-
-	float CollisionObject::getOuterRadius() const
-	{
-		return outerRadius_;
+		return radius_;
 	}
 
 	void* CollisionObject::getUserData()
@@ -70,8 +64,8 @@ namespace collision
 	Vec2i CollisionObject::getGridPosition() const
 	{
 		Vec2i result;
-		result.x = position_.x / gridTileSize_.x;
-		result.y = position_.y / gridTileSize_.y;
+		result.x = position_.x / tileSize_.x;
+		result.y = position_.y / tileSize_.y;
 		return result;
 	}
 
