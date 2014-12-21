@@ -7,7 +7,6 @@
 namespace collision
 {
     struct Collision {
-        bool willCollide;
         bool collide;
         Vec2f minTranslationVector;
     };
@@ -23,13 +22,15 @@ namespace collision
             float max;
         };
 
-        static bool checkCircleCircle(const Vec2f &p_midA, const float p_radiusA, const Vec2f &p_midB, const float p_radiusB);
-        static Interval getProjectionIntervalRect(const Vec2f &p_axis, const std::vector<Vec2f> &p_rectCorners);
-        static Interval getProjectionIntervalCircle(const Vec2f &p_axis, const Vec2f &p_mid, const float p_radius);
-        static float calcIntervalDistance(const Interval &p_intervalA, const Interval &p_ibtervalB);
+        static bool checkCircleCircle(const Circle &p_circleA, const Circle &p_circleB);
+        static Vec2f getAxisToClosestCorner(const Vec2f &p_circleMid, const Rectangle &p_rect);
+        static Collision getCollisionOf(const Vec2f &p_axis, const Circle &p_circle, const Rectangle &p_rect);
+        static Interval getProjectionIntervalRect(const Vec2f &p_axis, const Rectangle &p_rect);
+        static Interval getProjectionIntervalCircle(const Vec2f &p_axis, const Circle &p_circle);
+        static float calcIntervalDistance(const Interval &p_intervalA, const Interval &p_intervalB);
     public:
-        static Collision check(CollisionObject *a, CollisionObject *b, const float p_deltaSec = 1.0f);
-        static Collision check(CollisionObject *a, CollisionTile *b, const float p_deltaSec = 1.0f);
+        static Collision check(CollisionObject *a, CollisionObject *b);
+        static Collision check(CollisionObject *a, CollisionTile *b);
 
 
     };

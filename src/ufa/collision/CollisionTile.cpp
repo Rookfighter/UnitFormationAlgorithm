@@ -6,7 +6,7 @@ namespace collision
 {
 
     CollisionTile::CollisionTile(const Vec2i& p_position)
-            : isObstacle_(false), userData_(NULL), fineGrainedArea_(), position_(
+            : isObstacle_(false), userData_(NULL), fineGrainedArea_(), gridPosition_(
                     p_position), tileSize_(1, 1)
     {
     }
@@ -61,24 +61,14 @@ namespace collision
 
     const Vec2i& CollisionTile::getGridPosition() const
     {
-        return position_;
-    }
-
-    Vec2f CollisionTile::getTopLeft() const
-    {
-        Vec2f result;
-        result.x = position_.x * tileSize_.x;
-        result.y = position_.y * tileSize_.y;
-
-        return result;
+        return gridPosition_;
     }
 
     Vec2f CollisionTile::getPosition() const
     {
-        Vec2f result = getTopLeft();
-        result.x += tileSize_.x / 2;
-        result.y += tileSize_.y / 2;
-
+        Vec2f result;
+        result.x = tileSize_.x / 2 + tileSize_.x * gridPosition_.x;
+        result.y = tileSize_.y / 2 + tileSize_.y * gridPosition_.y;
         return result;
     }
 
@@ -113,18 +103,9 @@ namespace collision
         return userData_;
     }
 
-    std::vector<Vec2f> CollisionTile::getCorners() const
+    Rectangle CollisionTile::getRect() const
     {
-        std::vector<Vec2f> corners(4);
-
-        float widthHalf = tileSize_.x / 2;
-        float heightHalf = tileSize_.y / 2;
-        corners[0].set(position_.x - widthHalf, position_.y - heightHalf);
-        corners[1].set(position_.x + widthHalf, position_.y - heightHalf);
-        corners[2].set(position_.x + widthHalf, position_.y + heightHalf);
-        corners[3].set(position_.x - widthHalf, position_.y + heightHalf);
-
-        return corners;
+        return Rectangle(getPosition(), tileSize_);
     }
 
 }

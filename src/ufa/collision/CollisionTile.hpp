@@ -4,6 +4,7 @@
 #include <vector>
 #include "ufa/collision/Vec2i.hpp"
 #include "ufa/collision/Vec2f.hpp"
+#include "ufa/collision/Rectangle.hpp"
 
 namespace collision
 {
@@ -12,7 +13,7 @@ namespace collision
 	private:
 		static const unsigned int GRANULARITY = 4;
 		
-		Vec2i position_;
+		Vec2i gridPosition_;
 		Vec2f tileSize_;
 		
 		bool isObstacle_;
@@ -32,7 +33,6 @@ namespace collision
 		void setUserData(void *p_userData);
 		
 		const Vec2i& getGridPosition() const;
-		Vec2f getTopLeft() const;
 		Vec2f getPosition() const;
 		const Vec2f& getTileSize() const;
 		bool isObstacle() const;
@@ -40,7 +40,7 @@ namespace collision
 		bool getFineGrainedAreaTile(const int x, const int y) const;
 		unsigned int getGranularity() const;
 		void* getUserData();
-		std::vector<Vec2f> getCorners() const;
+		Rectangle getRect() const;
 	};
 
 }

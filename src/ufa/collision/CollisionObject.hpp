@@ -3,6 +3,7 @@
 
 #include "ufa/collision/Vec2f.hpp"
 #include "ufa/collision/Vec2i.hpp"
+#include "ufa/collision/Circle.hpp"
 
 namespace collision
 {
@@ -31,6 +32,7 @@ namespace collision
 		float getRadius() const;
 		void* getUserData();
 		Vec2i getGridPosition() const;
+		Circle getCirlce() const;
 		
 	};
 

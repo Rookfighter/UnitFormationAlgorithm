@@ -69,4 +69,11 @@ namespace collision
 		return result;
 	}
 
+	Circle CollisionObject::getCirlce() const
+	{
+	    return Circle(position_, radius_);
+	}
+
 }
+
+
