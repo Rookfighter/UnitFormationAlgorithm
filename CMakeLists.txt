@@ -4,21 +4,23 @@ project(UnitFormationAlgorithm)
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
 get_filename_component(SFML_ROOT "./lib/SFML-2.2" ABSOLUTE)
+get_filename_component(CATCH_ROOT "./lib/Catch" ABSOLUTE)
 get_filename_component(CDL_MODULES_PATH "./cmake-modules" ABSOLUTE) 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CDL_MODULES_PATH})
 
 find_package(SFML 2 COMPONENTS system window graphics audio network REQUIRED)
+find_package(Catch)
 
 include_directories("src" ${SFML_INCLUDE_DIR})
 file(GLOB UFA_SRC
-	"src/ufa/main.cpp"
-	"src/ufa/collision/*.cpp"
-	"src/ufa/entities/*.cpp"
-	"src/ufa/ui/*.cpp"
-	"src/ufa/logic/*.cpp"
-	"src/ufa/general/*.cpp"
-	"src/ufa/app/*.cpp")
+	"src/main.cpp"
+	"src/collision/*.cpp"
+	"src/entities/*.cpp"
+	"src/ui/*.cpp"
+	"src/logic/*.cpp"
+	"src/general/*.cpp"
+	"src/app/*.cpp")
 
 add_executable(${PROJECT_NAME} ${UFA_SRC})
 target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
