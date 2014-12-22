@@ -1,6 +1,3 @@
-set(UFA_LIBRARY "ufa")
-set(UFA_EXEC "UnitFormationAlgorithm")
-
 include_directories("${CMAKE_SOURCE_DIR}/src" ${SFML_INCLUDE_DIR})
 file(GLOB UFA_LIB_SRC
 	"collision/*.cpp"

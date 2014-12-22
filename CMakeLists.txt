@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(UnitFormationAlgorithm)
 
+set(UFA_LIBRARY "ufa")
+set(UFA_EXEC "UnitFormationAlgorithm")
+set(UFA_TEST_EXEC "TestUFA")
+
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
 get_filename_component(SFML_ROOT "./lib/SFML-2.2" ABSOLUTE)

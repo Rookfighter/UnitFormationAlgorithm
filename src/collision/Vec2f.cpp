@@ -1,6 +1,6 @@
-#include <cmath>
 #include <sstream>
 #include "collision/Vec2f.hpp"
+#include "collision/utils.hpp"
 
 namespace collision
 {
@@ -38,6 +38,11 @@ namespace collision
 		return Vec2f(-y, x);
 	}
 	
+	bool Vec2f::equals(const Vec2f &p_vector, const float p_eps) const
+	{
+	    return sameFloat(x, p_vector.x, p_eps) && sameFloat(y, p_vector.y, p_eps);
+	}
+
 	Vec2f& Vec2f::operator+=(Vec2f const& p_vec)
 	{
 		x += p_vec.x;

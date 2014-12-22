@@ -24,6 +24,8 @@ namespace collision
 		void invert();
 		Vec2f perpendicular() const;
 		
+		bool equals(const Vec2f &p_vector, const float p_eps) const;
+
 		Vec2f& operator+=(Vec2f const& p_vec);
 		Vec2f& operator-=(Vec2f const& p_vec);
 		Vec2f& operator*=(const float p_factor);
