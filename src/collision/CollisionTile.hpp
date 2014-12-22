@@ -28,7 +28,7 @@ namespace collision
 		
 		void setIsObstalce(const bool p_isObstacle);
 		void setIsFineGrained(const bool p_isFineGrained);
-		void setFineGrainedAreaTile(const int x, const int y, const bool p_tileIsObstalce);
+		void setFineGrainedTile(const int x, const int y, const bool p_tileIsObstalce);
 		void setTileSize(const Vec2f &p_size);
 		void setUserData(void *p_userData);
 		
@@ -37,7 +37,8 @@ namespace collision
 		const Vec2f& getTileSize() const;
 		bool isObstacle() const;
 		bool isFineGrained() const;
-		bool getFineGrainedAreaTile(const int x, const int y) const;
+		bool getFineGrainedTile(const int x, const int y) const;
+		void getFineGrainedArea(std::vector<std::vector<Rectangle>> &p_tileRects) const;
 		unsigned int getGranularity() const;
 		void* getUserData();
 		Rectangle getRect() const;

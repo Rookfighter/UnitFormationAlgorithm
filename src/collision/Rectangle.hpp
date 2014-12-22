@@ -14,6 +14,7 @@ namespace collision
         Vec2f size_;
         std::vector<Vec2f> corners_;
     public:
+        Rectangle();
         Rectangle(const Vec2f &p_center, const Vec2f &p_size);
         ~Rectangle();
 

@@ -2,6 +2,11 @@
 
 namespace collision
 {
+    Rectangle::Rectangle()
+    :Rectangle(Vec2f(0,0), Vec2f(1,1))
+    {
+    }
+
     Rectangle::Rectangle(const Vec2f& p_center, const Vec2f& p_size)
     : center_(p_center), size_(p_size), corners_(4)
     {
@@ -39,5 +44,3 @@ namespace collision
         return corners_;
     }
 }
-
-

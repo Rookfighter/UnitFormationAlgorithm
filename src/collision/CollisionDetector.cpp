@@ -21,39 +21,56 @@ namespace collision
         Circle circleA = a->getCirlce();
         Circle circleB = b->getCirlce();
 
+        // check if circles collide
         result.collide = checkCircleCircle(circleA, circleB);
-        if(!result.collide)
-            return result;
+        if(result.collide)
+            result.minTranslationVector = getMinTranslationVector(circleA,
+                    circleB);
 
+        return result;
+    }
+
+    bool CollisionDetector::checkCircleCircle(const Circle &p_circleA,
+            const Circle &p_circleB)
+    {
+        return (p_circleA.getMid() - p_circleB.getMid()).lengthSQ()
+                <= (p_circleA.getRadius() + p_circleB.getRadius())
+                        * (p_circleA.getRadius() + p_circleB.getRadius());
+    }
+
+    Vec2f CollisionDetector::getMinTranslationVector(const Circle &p_circleA,
+            const Circle &p_circleB)
+    {
+        Vec2f minTranslationVector;
         std::array<Vec2f, 2> axis;
-        axis[0].set(0,1);
-        axis[1].set(1,0);
+        axis[0].set(0, 1);
+        axis[1].set(1, 0);
         float minIntervalDistance = FLT_MAX;
         Vec2f minIntervalAxis;
 
         for(unsigned int i = 0; i < axis.size(); ++i) {
-            Interval intervalA = getProjectionIntervalCircle(axis[i], circleA);
-            Interval intervalB = getProjectionIntervalCircle(axis[i], circleB);
-            float intervalDistance = fabs(calcIntervalDistance(intervalA, intervalB));
+            Interval intervalA = getProjectionIntervalCircle(axis[i],
+                    p_circleA);
+            Interval intervalB = getProjectionIntervalCircle(axis[i],
+                    p_circleB);
+            float intervalDistance = fabs(
+                    getIntervalDistance(intervalA, intervalB));
             if(intervalDistance < minIntervalDistance) {
                 minIntervalDistance = intervalDistance;
                 minIntervalAxis = axis[i];
             }
         }
 
-        Vec2f midDistance = b->getPosition() - a->getPosition();
+        // calc vector from B to A, so the direction we want to translate A
+        Vec2f midDistance = p_circleA.getMid() - p_circleB.getMid();
+        // project vector on axis with smallest interval distance
+        // if translationAxis points in opposite direction than vector then
+        // result is negative
         if(midDistance * minIntervalAxis < 0)
             minIntervalAxis.invert();
 
-        result.minTranslationVector = minIntervalAxis * minIntervalDistance;
-
-        return result;
-    }
-
-    bool CollisionDetector::checkCircleCircle(const Circle &p_circleA, const Circle &p_circleB)
-    {
-        return (p_circleA.getMid() - p_circleB.getMid()).lengthSQ()
-                <= (p_circleA.getRadius() + p_circleB.getRadius()) * (p_circleA.getRadius() + p_circleB.getRadius());
+        minTranslationVector = minIntervalAxis * minIntervalDistance;
+        return minTranslationVector;
     }
 
     Collision CollisionDetector::check(CollisionObject *a, CollisionTile *b)
@@ -92,21 +109,21 @@ namespace collision
             const Rectangle &p_rect)
     {
         assert(!p_rect.getCorners().empty());
-        unsigned int closestCorner = 0;
-        float distanceSQ =
-                (p_circleMid - p_rect.getCorners()[closestCorner]).lengthSQ();
+        Vec2f closestCorner = p_rect.getCorners()[0];
+        float distanceSQ = (p_circleMid - closestCorner).lengthSQ();
 
         for(unsigned int i = 1; i < p_rect.getCorners().size(); ++i) {
             float distanceSQTmp =
                     (p_circleMid - p_rect.getCorners()[i]).lengthSQ();
             if(distanceSQTmp < distanceSQ) {
-                closestCorner = i;
+                closestCorner = p_rect.getCorners()[i];
                 distanceSQ = distanceSQTmp;
             }
         }
 
-        Vec2f diffVec = (p_circleMid - p_rect.getCorners()[closestCorner]);
-        return diffVec.perpendicular();
+        Vec2f diffVec = (p_circleMid - closestCorner);
+        diffVec.normalize();
+        return diffVec;
     }
 
     Collision CollisionDetector::getCollisionOf(const Vec2f &p_axis,
@@ -117,17 +134,24 @@ namespace collision
         Interval circleInterval = getProjectionIntervalCircle(p_axis, p_circle);
         Interval rectInterval = getProjectionIntervalRect(p_axis, p_rect);
 
-        float intervalDistance = calcIntervalDistance(circleInterval,
+        float intervalDistance = getIntervalDistance(circleInterval,
                 rectInterval);
-        if(intervalDistance > 0)
+        if(intervalDistance > 0) {
             result.collide = false;
+        } else {
+            intervalDistance = fabs(intervalDistance);
+            Vec2f translationAxis = p_axis;
 
-        intervalDistance = fabs(intervalDistance);
-        Vec2f translationAxis = p_axis;
-        Vec2f diff = p_circle.getMid() - p_rect.getCenter();
-        if(diff * translationAxis < 0)
-            translationAxis.invert();
-        result.minTranslationVector = intervalDistance * translationAxis;
+            // vector from rect center to circle mid which is direction in wich we
+            // want to translate circle
+            Vec2f diff = p_circle.getMid() - p_rect.getCenter();
+            // project vector on translationAxis
+            // if translationAxis points in opposite direction
+            // the result is negative
+            if(diff * translationAxis < 0)
+                translationAxis.invert();
+            result.minTranslationVector = intervalDistance * translationAxis;
+        }
 
         return result;
     }
@@ -142,7 +166,7 @@ namespace collision
         result.min = scalarProduct;
         result.max = scalarProduct;
 
-        for(unsigned int i = 0; i < p_rect.getCorners().size(); ++i) {
+        for(unsigned int i = 1; i < p_rect.getCorners().size(); ++i) {
             scalarProduct = p_rect.getCorners()[i] * p_axis;
             if(scalarProduct < result.min)
                 result.min = scalarProduct;
@@ -163,7 +187,7 @@ namespace collision
         return result;
     }
 
-    float CollisionDetector::calcIntervalDistance(const Interval& p_intervalA,
+    float CollisionDetector::getIntervalDistance(const Interval& p_intervalA,
             const Interval& p_intervalB)
     {
         if(p_intervalA.min < p_intervalB.min)

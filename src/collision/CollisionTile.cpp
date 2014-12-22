@@ -41,7 +41,7 @@ namespace collision
                 fineGrainedArea_.clear();
     }
 
-    void CollisionTile::setFineGrainedAreaTile(const int x, const int y,
+    void CollisionTile::setFineGrainedTile(const int x, const int y,
             const bool p_tileIsObstalce)
     {
         assert(isFineGrained());
@@ -87,10 +87,30 @@ namespace collision
         return !fineGrainedArea_.empty();
     }
 
-    bool CollisionTile::getFineGrainedAreaTile(const int x, const int y) const
+    bool CollisionTile::getFineGrainedTile(const int x, const int y) const
     {
         assert(isFineGrained());
         return fineGrainedArea_[x][y];
+    }
+
+    void CollisionTile::getFineGrainedArea(std::vector<std::vector<Rectangle>> &p_tileRects) const
+    {
+        assert(isFineGrained());
+
+        Rectangle rect = getRect();
+        Vec2f finegrainedSize = rect.getSize() / GRANULARITY;
+
+        p_tileRects.resize(GRANULARITY);
+        for(unsigned int x = 0; x < p_tileRects.size(); ++x) {
+            p_tileRects[x].resize(GRANULARITY);
+            Vec2f currentCenter;
+            currentCenter.x = rect.getTopLeft().x + finegrainedSize.x / 2 + finegrainedSize.x * x;
+
+            for(unsigned int y = 0; y < p_tileRects[x].size(); ++y) {
+                currentCenter.y = rect.getTopLeft().y + finegrainedSize.y / 2 + finegrainedSize.y * y;
+                p_tileRects[x][y] = Rectangle(currentCenter, finegrainedSize);
+            }
+        }
     }
 
     unsigned int CollisionTile::getGranularity() const
