@@ -38,7 +38,7 @@ namespace collision
 		bool isObstacle() const;
 		bool isFineGrained() const;
 		bool getFineGrainedTile(const int x, const int y) const;
-		void getFineGrainedArea(std::vector<std::vector<Rectangle>> &p_tileRects) const;
+		void getFineGrainedRects(std::vector<Rectangle> &p_tileRects) const;
 		unsigned int getGranularity() const;
 		void* getUserData();
 		Rectangle getRect() const;

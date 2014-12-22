@@ -93,23 +93,21 @@ namespace collision
         return fineGrainedArea_[x][y];
     }
 
-    void CollisionTile::getFineGrainedArea(std::vector<std::vector<Rectangle>> &p_tileRects) const
+    void CollisionTile::getFineGrainedRects(std::vector<Rectangle> &p_tileRects) const
     {
         assert(isFineGrained());
 
         Rectangle rect = getRect();
         Vec2f finegrainedSize = rect.getSize() / GRANULARITY;
 
-        p_tileRects.resize(GRANULARITY);
-        for(unsigned int x = 0; x < p_tileRects.size(); ++x) {
-            p_tileRects[x].resize(GRANULARITY);
+        p_tileRects.resize(GRANULARITY * GRANULARITY);
+        for(unsigned int i = 0; i < p_tileRects.size(); ++i) {
             Vec2f currentCenter;
+            unsigned int x = i / GRANULARITY;
+            unsigned int y = i % GRANULARITY;
             currentCenter.x = rect.getTopLeft().x + finegrainedSize.x / 2 + finegrainedSize.x * x;
-
-            for(unsigned int y = 0; y < p_tileRects[x].size(); ++y) {
-                currentCenter.y = rect.getTopLeft().y + finegrainedSize.y / 2 + finegrainedSize.y * y;
-                p_tileRects[x][y] = Rectangle(currentCenter, finegrainedSize);
-            }
+            currentCenter.y = rect.getTopLeft().y + finegrainedSize.y / 2 + finegrainedSize.y * y;
+            p_tileRects[x] = Rectangle(currentCenter, finegrainedSize);
         }
     }
 

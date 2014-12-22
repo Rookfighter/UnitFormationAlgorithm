@@ -22,11 +22,12 @@ namespace collision
             float max;
         };
 
-        static bool checkCircleCircle(const Circle &p_circleA, const Circle &p_circleB);
-        static Vec2f getMinTranslationVector(const Circle &p_circleA, const Circle &p_circleB);
+        static bool circlesCollide(const Circle &p_circleA, const Circle &p_circleB);
+        static Vec2f getCircleTranslationVector(const Circle &p_circleA, const Circle &p_circleB);
 
         static Vec2f getAxisToClosestCorner(const Vec2f &p_circleMid, const Rectangle &p_rect);
         static Collision getCollisionOf(const Vec2f &p_axis, const Circle &p_circle, const Rectangle &p_rect);
+
         static Interval getProjectionIntervalRect(const Vec2f &p_axis, const Rectangle &p_rect);
         static Interval getProjectionIntervalCircle(const Vec2f &p_axis, const Circle &p_circle);
         static float getIntervalDistance(const Interval &p_intervalA, const Interval &p_intervalB);
@@ -34,6 +35,9 @@ namespace collision
         static Collision check(CollisionObject *a, CollisionObject *b);
         static Collision check(CollisionObject *a, CollisionTile *b);
 
+        static Collision check(const Circle &p_circleA, const Circle &p_circleB);
+        static Collision check(const Circle &p_circle, const std::vector<Rectangle> &p_rects);
+        static Collision check(const Circle &p_circle, const Rectangle &p_rect);
 
     };
 

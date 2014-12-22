@@ -17,20 +17,25 @@ namespace collision
 
     Collision CollisionDetector::check(CollisionObject *a, CollisionObject *b)
     {
-        Collision result;
         Circle circleA = a->getCirlce();
         Circle circleB = b->getCirlce();
+        return check(circleA, circleB);
+    }
 
+    Collision CollisionDetector::check(const Circle &p_circleA,
+            const Circle &p_circleB)
+    {
+        Collision result;
         // check if circles collide
-        result.collide = checkCircleCircle(circleA, circleB);
+        result.collide = circlesCollide(p_circleA, p_circleB);
         if(result.collide)
-            result.minTranslationVector = getMinTranslationVector(circleA,
-                    circleB);
+            result.minTranslationVector = getCircleTranslationVector(p_circleA,
+                    p_circleB);
 
         return result;
     }
 
-    bool CollisionDetector::checkCircleCircle(const Circle &p_circleA,
+    bool CollisionDetector::circlesCollide(const Circle &p_circleA,
             const Circle &p_circleB)
     {
         return (p_circleA.getMid() - p_circleB.getMid()).lengthSQ()
@@ -38,7 +43,7 @@ namespace collision
                         * (p_circleA.getRadius() + p_circleB.getRadius());
     }
 
-    Vec2f CollisionDetector::getMinTranslationVector(const Circle &p_circleA,
+    Vec2f CollisionDetector::getCircleTranslationVector(const Circle &p_circleA,
             const Circle &p_circleB)
     {
         Vec2f minTranslationVector;
@@ -75,19 +80,54 @@ namespace collision
 
     Collision CollisionDetector::check(CollisionObject *a, CollisionTile *b)
     {
+        Rectangle rect = b->getRect();
+        Circle circle = a->getCirlce();
+        Collision result = check(circle, rect);
+
+        if(result.collide && b->isFineGrained()) {
+            std::vector<Rectangle> fineGrainedRects;
+            b->getFineGrainedRects(fineGrainedRects);
+            result = check(circle, fineGrainedRects);
+        }
+
+        return result;
+    }
+
+    Collision CollisionDetector::check(const Circle &p_circle,
+            const std::vector<Rectangle> &p_rects)
+    {
+        Collision result;
+        result.collide = false;
+        float translationDistanceSQ = FLT_MAX;
+
+        for(unsigned int i = 0; p_rects.size(); ++i) {
+            Collision collision = check(p_circle, p_rects[i]);
+            if(collision.collide
+                    && collision.minTranslationVector.lengthSQ()
+                            < translationDistanceSQ) {
+                result.collide = true;
+                result.minTranslationVector = collision.minTranslationVector;
+            }
+        }
+
+        return result;
+    }
+
+    Collision CollisionDetector::check(const Circle &p_circle,
+            const Rectangle &p_rect)
+    {
         Collision result;
         result.collide = true;
 
-        Rectangle rect = b->getRect();
-        Circle circle = a->getCirlce();
         std::array<Vec2f, 3> axis;
         axis[0].set(1, 0);
         axis[1].set(0, 1);
-        axis[2] = getAxisToClosestCorner(circle.getMid(), rect);
+        axis[2] = getAxisToClosestCorner(p_circle.getMid(), p_rect);
         float minTranslationDistanceSQ = FLT_MAX;
 
         for(unsigned int i = 0; i < axis.size(); ++i) {
-            Collision currentCollision = getCollisionOf(axis[i], circle, rect);
+            Collision currentCollision = getCollisionOf(axis[i], p_circle,
+                    p_rect);
 
             if(!currentCollision.collide) {
                 result.collide = false;
@@ -195,5 +235,4 @@ namespace collision
         else
             return p_intervalA.min - p_intervalB.max;
     }
-
 }

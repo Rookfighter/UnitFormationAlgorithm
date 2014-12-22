@@ -9,5 +9,6 @@ if( ${CATCH_FOUND} )
         
     add_executable(${UFA_TEST_EXEC} ${UFA_TEST_SRC})
     target_link_libraries(${UFA_TEST_EXEC} ${UFA_LIBRARY} ${SFML_LIBRARIES})
-    
+else( ${CATCH_FOUND} )
+    MESSAGE(STATUS "  No Tests will be built")
 endif( ${CATCH_FOUND} )
