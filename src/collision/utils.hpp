@@ -3,9 +3,12 @@
 
 #include <cmath>
 
-inline bool sameFloat(const float a, const float b, const float eps)
+namespace collision
 {
-    return fabs(a -b) <= eps;
+    inline bool sameFloat(const float a, const float b, const float eps)
+    {
+        return fabs(a - b) < eps;
+    }
 }
 
 #endif

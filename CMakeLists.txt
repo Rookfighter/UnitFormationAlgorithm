@@ -18,6 +18,8 @@ find_package(Catch)
 add_subdirectory(src)
 add_subdirectory(test)
 
+add_custom_target(test COMMAND ${UFA_TEST_EXEC} DEPENDS ${UFA_TEST_EXEC})
+
 if( ${WIN32} )
 	set(SFML_TO_COPY
 		"${SFML_ROOT}/bin/libsndfile-1.dll"
