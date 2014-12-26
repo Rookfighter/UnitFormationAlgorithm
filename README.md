@@ -12,9 +12,10 @@ to execute cmake to build the binary.
 
 ## Dependencies
 
-* UFA uses SFML 2.1 for visualization (get it [here](http://www.sfml-dev.org/))
-  * The dynamic libraries have to be placed in one of the directories ```lib/SFML-2.1/bin``` or ```lib/SFML-2.1/lib```
-  * The include files have to be place in the directory ```lib/SFML-2.1/include```
-  * on Linux libjpeg62 has to be installed Ubuntu: ```sudo apt-get install libjpeg62-dev```
-  * on Linux GLEW hast to be installed Ubuntu: ```sudo apt-get install libglew-dev```
-    * if linker cannot find GLEW create symlink from ```/usr/lib/x86_64-linux-gnu/libGLEW.so``` to ```/usr/lib/libGLEW.so```
+* UFA uses *SFML 2.2* for visualization (get it [here](http://www.sfml-dev.org/))
+	* SFML is expected to be in ```lib/SFML-2.2```
+	* on Linux libjpeg62 has to be installed Ubuntu: ```sudo apt-get install libjpeg62-dev```
+	* on Linux GLEW has to be installed Ubuntu: ```sudo apt-get install libglew-dev```
+ 	* if linker cannot find GLEW create symlink from ```/usr/lib/x86_64-linux-gnu/libGLEW.so``` to ```/usr/lib/libGLEW.so.1.10```
+* UFA uses *Catch* for Unit Testing (get it [here](https://github.com/philsquared/Catch))
+	* Catch is expected to be in ```lib/Catch```

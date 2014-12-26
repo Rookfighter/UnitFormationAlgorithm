@@ -19,31 +19,3 @@ add_subdirectory(src)
 add_subdirectory(test)
 
 add_custom_target(test COMMAND ${UFA_TEST_EXEC} DEPENDS ${UFA_TEST_EXEC})
-
-if( ${WIN32} )
-	set(SFML_TO_COPY
-		"${SFML_ROOT}/bin/libsndfile-1.dll"
-		"${SFML_ROOT}/bin/openal32.dll"
-		"${SFML_ROOT}/bin/sfml-audio-2.dll"
-		"${SFML_ROOT}/bin/sfml-system-2.dll"
-		"${SFML_ROOT}/bin/sfml-network-2.dll"
-		"${SFML_ROOT}/bin/sfml-graphics-2.dll"
-		"${SFML_ROOT}/bin/sfml-window-2.dll"
-	)
-else( ${WIN32} )
-	file(GLOB SFML_TO_COPY
-		"${SFML_ROOT}/lib/libsfml-audio.so.*"
-		"${SFML_ROOT}/lib/libsfml-system.so.*"
-		"${SFML_ROOT}/lib/libsfml-network.so.*"
-		"${SFML_ROOT}/lib/libsfml-graphics.so.*"
-		"${SFML_ROOT}/lib/libsfml-window.so.*"
-	)
-endif( ${WIN32} )
-
-foreach(TO_COPY ${SFML_TO_COPY})
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			${TO_COPY}
-			$<TARGET_FILE_DIR:${PROJECT_NAME}>)
-endforeach(TO_COPY ${SFML_TO_COPY})
-
