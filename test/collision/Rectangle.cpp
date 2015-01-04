@@ -11,6 +11,7 @@ TEST_CASE("init rectangle")
     CHECK(rect.getCenter().equals(rectCenter, equalEps));
     CHECK(rect.getSize().equals(rectSize, equalEps));
 
+    // check that corners are ordered counter clockwise
     CHECK(rect.getCorners()[0].equals(collision::Vec2f(0.5, 0), equalEps));
     CHECK(rect.getCorners()[1].equals(collision::Vec2f(1.5, 0), equalEps));
     CHECK(rect.getCorners()[2].equals(collision::Vec2f(1.5, 2), equalEps));

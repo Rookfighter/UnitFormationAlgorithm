@@ -97,10 +97,11 @@ namespace collision
     {
         assert(isFineGrained());
 
+        p_tileRects.resize(GRANULARITY * GRANULARITY);
         Rectangle rect = getRect();
         Vec2f finegrainedSize = rect.getSize() / GRANULARITY;
 
-        p_tileRects.resize(GRANULARITY * GRANULARITY);
+        //p_tileRects.resize(GRANULARITY * GRANULARITY);
         for(unsigned int i = 0; i < p_tileRects.size(); ++i) {
             Vec2f currentCenter;
             unsigned int x = i / GRANULARITY;

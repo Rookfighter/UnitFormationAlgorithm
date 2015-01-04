@@ -32,15 +32,14 @@ namespace collision
         static Interval getProjectionIntervalCircle(const Vec2f &p_axis, const Circle &p_circle);
         static float getIntervalDistance(const Interval &p_intervalA, const Interval &p_intervalB);
     public:
-        static Collision check(CollisionObject *a, CollisionObject *b);
-        static Collision check(CollisionObject *a, CollisionTile *b);
+        static Collision check(const CollisionObject &p_objectA, const CollisionObject &p_objectB);
+        static Collision check(const CollisionObject &p_object, const CollisionTile &p_tile);
 
         static Collision check(const Circle &p_circleA, const Circle &p_circleB);
         static Collision check(const Circle &p_circle, const std::vector<Rectangle> &p_rects);
         static Collision check(const Circle &p_circle, const Rectangle &p_rect);
 
     };
-
 }
 
 #endif

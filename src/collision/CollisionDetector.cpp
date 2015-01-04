@@ -15,11 +15,9 @@ namespace collision
     {
     }
 
-    Collision CollisionDetector::check(CollisionObject *a, CollisionObject *b)
+    Collision CollisionDetector::check(const CollisionObject &p_objectA, const CollisionObject &p_objectB)
     {
-        Circle circleA = a->getCirlce();
-        Circle circleB = b->getCirlce();
-        return check(circleA, circleB);
+        return check(p_objectA.getCirlce(), p_objectB.getCirlce());
     }
 
     Collision CollisionDetector::check(const Circle &p_circleA,
@@ -38,18 +36,21 @@ namespace collision
     bool CollisionDetector::circlesCollide(const Circle &p_circleA,
             const Circle &p_circleB)
     {
+        float radiusSum = p_circleA.getRadius() + p_circleB.getRadius();
         return (p_circleA.getMid() - p_circleB.getMid()).lengthSQ()
-                <= (p_circleA.getRadius() + p_circleB.getRadius())
-                        * (p_circleA.getRadius() + p_circleB.getRadius());
+                <= radiusSum * radiusSum;
     }
 
     Vec2f CollisionDetector::getCircleTranslationVector(const Circle &p_circleA,
             const Circle &p_circleB)
     {
         Vec2f minTranslationVector;
+
+        // axis are the standard axis of coordinate system
         std::array<Vec2f, 2> axis;
         axis[0].set(0, 1);
         axis[1].set(1, 0);
+
         float minIntervalDistance = FLT_MAX;
         Vec2f minIntervalAxis;
 
@@ -78,15 +79,15 @@ namespace collision
         return minTranslationVector;
     }
 
-    Collision CollisionDetector::check(CollisionObject *a, CollisionTile *b)
+    Collision CollisionDetector::check(const CollisionObject &p_object, const CollisionTile &p_tile)
     {
-        Rectangle rect = b->getRect();
-        Circle circle = a->getCirlce();
+        Rectangle rect = p_tile.getRect();
+        Circle circle = p_object.getCirlce();
         Collision result = check(circle, rect);
 
-        if(result.collide && b->isFineGrained()) {
+        if(result.collide && p_tile.isFineGrained()) {
             std::vector<Rectangle> fineGrainedRects;
-            b->getFineGrainedRects(fineGrainedRects);
+            p_tile.getFineGrainedRects(fineGrainedRects);
             result = check(circle, fineGrainedRects);
         }
 
